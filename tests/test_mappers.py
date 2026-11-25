@@ -42,3 +42,13 @@ def test_remoteok_skips_the_terms_notice_and_links_back():
     assert job.is_remote is True
     assert "remoteok.com" in job.source_url.lower()
     assert job.apply_url == job.source_url
+
+
+def test_remoteok_tracking_line_is_never_stored():
+    from app.ingest import remoteok
+
+    item = {"id": 1, "company": "Acme", "position": "Engineer", "url": "https://example.com/1",
+            "description": "<p>Build things.</p><br/>Please mention the word **X** and tag RAAAA when applying."}
+    job = remoteok.to_posting(item, {"board": "remoteok"})
+    assert job.description_text == "Build things."
+    assert "tag RAAAA" not in str(job.raw)

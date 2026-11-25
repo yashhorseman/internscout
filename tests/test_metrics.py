@@ -35,3 +35,12 @@ def test_paired_difference():
     a = {f"q{i}": 0.2 for i in range(20)}
     assert paired_difference(a, {q: v + 0.3 for q, v in a.items()})["clear"]
     assert not paired_difference(a, a)["clear"]
+
+
+def test_weighted_kappa():
+    from evals.agreement import weighted_kappa
+
+    assert weighted_kappa([(0, 0), (1, 1), (2, 2)]) == 1.0
+    assert weighted_kappa([(0, 2), (2, 0)]) == -1.0
+    near, far = [(0, 0), (1, 1), (2, 2), (0, 1)], [(0, 0), (1, 1), (2, 2), (0, 2)]
+    assert weighted_kappa(near) > weighted_kappa(far)

@@ -40,7 +40,8 @@ return too few rows. `hnsw.iterative_scan` makes it keep looking.
 ## The benchmark
 1. Freeze a copy of the data (`evals.snapshot`), so labels stay valid.
 2. For each query, pool the top 10 of all four modes (`evals.pool`).
-3. A person grades each candidate 0, 1 or 2 without seeing which mode found it (`evals.label`).
+3. Each candidate gets 0, 1 or 2 from a grader that cannot see which mode found it. Here an
+   AI graded them; `evals.label --check` lets a person re-grade a sample blind.
 4. Score each mode (`evals.run_eval`), tune on `dev`, report once on `test`.
 
 - **Recall@5:** of all relevant jobs, the share in the top 5.
@@ -52,10 +53,12 @@ return too few rows. `hnsw.iterative_scan` makes it keep looking.
 ## Limitations to state openly
 - Queries were drafted by an AI assistant; the author reviewed them and made no changes.
 - Company "about us" text is long and repeated across postings, and it is embedded and keyword-indexed with the rest. Its effect on ranking is not yet measured.
-- 40 queries, one labeler.
+- 40 queries; one AI grader, single pass, not yet checked by a person.
 - A relevant job that no mode retrieved is unlabeled and counts as not relevant.
 - The corpus is India-based plus intern and entry-level postings, not the whole index.
 - Queries with no relevant job are left out of every average, including MRR.
+
+Results: docs/results.md. What went wrong: docs/failure_analysis.md.
 
 ## Interview questions
 1. *Why not just add the two scores?* They are on unrelated scales.

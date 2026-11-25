@@ -17,3 +17,4 @@ Broke and fixed:
 Then: author chose AI grading; a Claude subagent graded the pool. First chat agent and page built.
 - Remote OK appends a line holding the requester's IP in base64; it had reached a committed test file.
 - The agent quoted job titles as evidence until the prompt said not to.
+- Benchmark on dev: semantic beat hybrid and the re-ranker, against expectation. See failure_analysis.md.

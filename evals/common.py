@@ -8,6 +8,7 @@ from app.config import settings
 HERE = Path(__file__).parent
 QUERIES = HERE / "queries.jsonl"
 QRELS = HERE / "qrels.jsonl"
+QRELS_CHECK = HERE / "qrels_check.jsonl"  # the author's blind re-grades
 POOL = HERE / "pool.json"
 VECTORS = HERE / "query_vectors.json"
 RESULTS = HERE / "results"

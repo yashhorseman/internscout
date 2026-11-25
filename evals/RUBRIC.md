@@ -1,5 +1,7 @@
 # Labeling rubric
 
+The grades in qrels.jsonl were assigned by an AI following this rubric.
+
 Grade each posting against the query **and its filters**, from what the posting says.
 
 | Grade | Meaning |

@@ -7,4 +7,6 @@ Broke and fixed:
 - Keyword search ignored the full-text index after bulk writes. Ingestion now runs `vacuum analyze`.
 - Locations such as "Mohali, IND" had no country.
 Later: embedding worker, four search modes, benchmark tools and 40 draft queries; 45 tests.
-Next: finish embedding, freeze the snapshot, label.
+Evening: embedded 815 postings, froze the evaluation snapshot, measured latency.
+Seen: many same-title postings are separate openings with different text; kept all.
+Next: author reviews the queries, then pooling and labeling.

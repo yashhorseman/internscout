@@ -25,4 +25,18 @@ gave 0.587), so we normalize before storing.
 
 ## Embedding text
 - Cut at 6,000 characters; 50 sampled postings: median 1,178 tokens, max 1,977, none over 2,048
-- Priority set embedded first: 815 India, intern or entry-level postings
+- Priority set embedded first: 815 India, intern or entry-level postings, no failed calls and no
+  daily-limit error. The other 2,125 open postings are not embedded yet.
+- Database with those 815 vectors: 75 MB
+
+## Search time (2026-11-25, M2 laptop, local database, 815 postings, 200 runs per mode)
+Query vectors were already cached, so the embedding call is not included.
+
+| Mode | p50 ms | p95 ms |
+|---|---|---|
+| keyword | 1.7 | 4.3 |
+| semantic | 3.8 | 4.5 |
+| hybrid | 4.7 | 8.0 |
+| hybrid_rerank | 173.9 | 210.7 |
+
+Embedding one query through the API: median 425 ms (only 5 calls, a rough figure).

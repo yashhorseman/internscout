@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://postgres:postgres@localhost:5432/internscout"
     gemini_api_key: str = ""
     user_agent: str = "InternScout/0.1"
+    chat_model: str = "gemini-3.5-flash-lite"
 
 
 settings = Settings()

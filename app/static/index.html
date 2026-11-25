@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InternScout</title>
+<style>
+  :root { --bg:#f7f7f5; --card:#fff; --text:#1c1c1a; --muted:#66665f; --line:#ddddd6; --accent:#1f5fbf; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161615; --card:#212120; --text:#ececea; --muted:#a3a39b; --line:#383835; --accent:#7fb0ff; }
+  }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:16px 16px 120px; }
+  h1 { font-size:20px; margin:8px 0 2px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .you { margin:20px 0 8px; font-weight:600; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px; margin:8px 0; }
+  .card h2 { font-size:16px; margin:0; }
+  .quote { border-left:3px solid var(--line); padding-left:8px; margin:6px 0; color:var(--muted); }
+  a, button.link { color:var(--accent); }
+  button { font:inherit; border:1px solid var(--line); background:var(--card); color:var(--text);
+           border-radius:6px; padding:4px 10px; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+  form { position:fixed; bottom:0; left:0; right:0; background:var(--bg); border-top:1px solid var(--line); padding:12px 16px; }
+  form div { max-width:720px; margin:0 auto; display:flex; gap:8px; }
+  input { flex:1; font:inherit; padding:8px 10px; border-radius:6px; border:1px solid var(--line);
+          background:var(--card); color:var(--text); }
+</style>
+</head>
+<body>
+<main>
+  <h1>InternScout</h1>
+  <div class="muted">Searches postings from a limited set of company job boards. Check the posting before applying.
+    This browser keeps your conversation id; clearing site data forgets it. Messages are sent to a free AI service,
+    which may use them to improve its products, so leave out personal details.
+    <button id="reset" type="button">New conversation</button></div>
+  <div id="log" aria-live="polite"></div>
+</main>
+<form id="form">
+  <div>
+    <input id="text" maxlength="1000" autocomplete="off" placeholder="I know Python and want a backend internship in Bengaluru">
+    <button id="send">Send</button>
+  </div>
+</form>
+<script>
+const log = document.getElementById("log"), input = document.getElementById("text"), send = document.getElementById("send");
+
+// Text is only ever set with textContent: postings and model output are untrusted.
+function el(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+function link(url, text) {
+  const a = el("a", text);
+  if (/^https?:\/\//i.test(url || "")) { a.href = url; a.target = "_blank"; a.rel = "noopener"; }
+  return a;
+}
+async function post(path, body) {
+  const response = await fetch(path, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body || {})});
+  if (!response.ok) { const error = new Error("request failed"); error.status = response.status; throw error; }
+  return response.json();
+}
+function stored(value) {
+  try {
+    if (value === undefined) return localStorage.getItem("session");
+    value === null ? localStorage.removeItem("session") : localStorage.setItem("session", value);
+  } catch (e) { return null; }
+}
+let session = stored();
+async function ensureSession() {
+  if (!session) { session = (await post("/sessions")).session_id; stored(session); }
+  return session;
+}
+function card(job) {
+  const box = el("div", "", "card");
+  box.append(el("h2", job.title));
+  box.append(el("div", [job.company, job.location, job.level !== "unknown" ? job.level : ""].filter(Boolean).join(" · "), "muted"));
+  box.append(el("p", job.why));
+  if (job.evidence) box.append(el("div", "From the posting: “" + job.evidence + "”", "quote"));
+  const row = el("div", "", "row");
+  row.append(link(job.apply_url, "Apply"));
+  if (job.source === "remoteok") row.append(link(job.source_url, "via Remote OK"));
+  for (const [signal, label] of [["like", "Like"], ["dislike", "Dislike"], ["save", "Save"]]) {
+    const button = el("button", label);
+    button.type = "button";
+    button.onclick = async () => { await post(`/sessions/${session}/feedback`, {job_id: job.job_id, signal}); button.disabled = true; };
+    row.append(button);
+  }
+  box.append(row);
+  return box;
+}
+document.getElementById("reset").onclick = () => { session = null; stored(null); log.textContent = ""; input.focus(); };
+document.getElementById("form").onsubmit = async (event) => {
+  event.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = ""; send.disabled = true;
+  log.append(el("div", text, "you"));
+  const waiting = el("div", "Searching… this can take a little while.", "muted");
+  log.append(waiting); waiting.scrollIntoView();
+  try {
+    let reply;
+    try { reply = await post(`/sessions/${await ensureSession()}/messages`, {text}); }
+    catch (error) {
+      if (error.status !== 404) throw error;
+      session = null; stored(null);  // the database no longer knows this id
+      reply = await post(`/sessions/${await ensureSession()}/messages`, {text});
+    }
+    waiting.remove();
+    log.append(el("p", reply.message));
+    for (const job of reply.cards) log.append(card(job));
+    if (reply.clarifying_question) log.append(el("p", reply.clarifying_question));
+  } catch (error) {
+    waiting.textContent = "Something went wrong. Please try again.";
+  }
+  send.disabled = false; input.focus();
+  log.lastElementChild.scrollIntoView({block: "nearest"});
+};
+</script>
+</body>
+</html>

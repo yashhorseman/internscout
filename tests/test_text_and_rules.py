@@ -37,3 +37,11 @@ def test_countries():
     assert parse_country("Bengaluru; London") is None  # two countries: do not guess
     assert parse_country("Join us remotely") is None
     assert parse_country(None) is None
+
+
+def test_repair_mojibake_fixes_only_broken_sequences():
+    from app.ingest.text import repair_mojibake
+
+    broken = "Thrive’s café ₹5".encode("utf-8").decode("latin-1")
+    assert repair_mojibake(broken) == "Thrive’s café ₹5"
+    assert repair_mojibake("Thrive’s café ₹5 Âge") == "Thrive’s café ₹5 Âge"

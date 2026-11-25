@@ -41,6 +41,21 @@ def html_to_text(html: str | None) -> str:
     return clean_text("".join(parser.parts))
 
 
+# a UTF-8 lead byte followed by the right number of continuation bytes, each read as latin-1
+_MOJIBAKE = re.compile("[\xc2-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xf4][\x80-\xbf]{3}")
+
+
+def repair_mojibake(text: str) -> str:
+    """Undo UTF-8 that was decoded as latin-1 somewhere upstream ("â\\x80\\x99" -> "’")."""
+    def decode(match: re.Match) -> str:
+        try:
+            return match.group().encode("latin-1").decode("utf-8")
+        except UnicodeDecodeError:
+            return match.group()
+
+    return _MOJIBAKE.sub(decode, text)
+
+
 def clean_text(text: str) -> str:
     text = text.replace("\x00", "").replace("\xa0", " ")  # Postgres rejects NUL
     text = re.sub(r"[ \t\r\f\v]+", " ", text)

@@ -5,7 +5,7 @@ back to the Remote OK URL and naming Remote OK as the source. The UI must show
 "via Remote OK" with `source_url` on every such result.
 """
 from app.ingest.models import JobPosting
-from app.ingest.text import html_to_text
+from app.ingest.text import html_to_text, repair_mojibake
 
 
 def url(board: dict) -> str:
@@ -21,11 +21,12 @@ def to_posting(item: dict, board: dict) -> JobPosting:
         source="remoteok",
         board=board["board"],
         source_job_id=str(item["id"]),
-        company=item["company"].strip(),
-        title=item["position"].strip(),
-        location_raw=item.get("location") or None,
+        company=repair_mojibake(item["company"]).strip(),
+        title=repair_mojibake(item["position"]).strip(),
+        location_raw=repair_mojibake(item.get("location") or "") or None,
         is_remote=True,
-        description_text=html_to_text(item.get("description")),
+        # the feed itself sends UTF-8 that was decoded as latin-1
+        description_text=html_to_text(repair_mojibake(item.get("description") or "")),
         apply_url=item["url"],  # link to Remote OK, as their terms ask
         source_url=item["url"],
         posted_at=item.get("date"),

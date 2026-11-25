@@ -9,4 +9,9 @@ Broke and fixed:
 Later: embedding worker, four search modes, benchmark tools and 40 draft queries; 45 tests.
 Evening: embedded 815 postings, froze the evaluation snapshot, measured latency.
 Seen: many same-title postings are separate openings with different text; kept all.
-Next: author reviews the queries, then pooling and labeling.
+Night: queries approved unchanged; pooled 776 query-posting pairs (420 different postings).
+Broke and fixed:
+- The labeling screen showed the first 500 characters, which for most companies was "about us" text.
+- Remote OK sends garbled punctuation (UTF-8 read as latin-1). Repaired on import; the frozen corpus
+  still has 3 affected postings.
+Next: author labels the pool.

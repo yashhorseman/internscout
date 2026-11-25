@@ -53,7 +53,8 @@ return too few rows. `hnsw.iterative_scan` makes it keep looking.
 ## Limitations to state openly
 - Queries were drafted by an AI assistant; the author reviewed them and made no changes.
 - Company "about us" text is long and repeated across postings, and it is embedded and keyword-indexed with the rest. Its effect on ranking is not yet measured.
-- 40 queries; one AI grader, single pass. A human re-grade of 50 pairs agreed poorly (kappa 0.36).
+- 40 queries; one AI grader, single pass. A first human check agreed poorly (kappa 0.36), so the
+  rubric was tightened and everything regraded; the new grades await a second check.
 - A relevant job that no mode retrieved is unlabeled and counts as not relevant.
 - The corpus is India-based plus intern and entry-level postings, not the whole index.
 - Queries with no relevant job are left out of every average, including MRR.

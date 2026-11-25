@@ -8,13 +8,13 @@ A job-search agent over a refreshed index of real job postings. **Work in progre
 | Ingestion from public job-board APIs, change detection, safe expiry | Done |
 | Postgres schema, versioned migrations, full-text index | Done |
 | Embeddings and keyword / semantic / hybrid / re-ranked search | Done |
-| Retrieval benchmark | Provisional development-set results; grading rules and test run to do |
+| Retrieval benchmark | Provisional development-set results; human check and test run to do |
 | Chat agent (tools, memory, checked answers) and web page | First version, runs locally |
 | Grounding evaluation, deployment, daily schedule | Planned |
 
-## First benchmark results
-NDCG@10 on 26 development queries over 815 real postings, **graded by an AI; a human re-grade of
-50 pairs agreed poorly (weighted kappa 0.36), so treat these as provisional**: keyword 0.61, hybrid 0.80, hybrid with re-ranker 0.76, semantic 0.90.
+## First benchmark results (provisional)
+NDCG@10 on 23 development queries over 815 real postings, **graded by an AI**; a human check of
+these grades is pending: keyword 0.63, hybrid with re-ranker 0.79, hybrid 0.81, semantic 0.86.
 Details and caveats: [docs/results.md](docs/results.md);
 failures: [docs/failure_analysis.md](docs/failure_analysis.md).
 

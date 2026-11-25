@@ -21,3 +21,4 @@ Then: author chose AI grading; a Claude subagent graded the pool. First chat age
 - Human check of 50 grades: weighted kappa 0.36. Test run held until the grading rules are tightened.
 - Rubric version 2 (author decided: other Indian city = partly; no level asked = seniority ignored; different kind of work = 0). Round-one grades kept as *_round1.
 - Rewrote local history to remove the tracking address before any push.
+- Regraded under rubric 2. Semantic still ahead of hybrid (+0.05); two earlier "clear" setting effects vanished.

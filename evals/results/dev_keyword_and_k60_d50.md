@@ -1,18 +1,18 @@
 Setting: {'mode': 'keyword', 'match': 'and', 'rrf_k': 60, 'depth': 50}
-Queries scored: 26; with nothing relevant: 2; unlabeled results in top 10: 0
+Queries scored: 23; with nothing relevant: 5; unlabeled results in top 10: 0
 
 | Metric | Mean | 95% interval |
 |---|---|---|
-| recall@5 | 0.306 | 0.210 to 0.414 |
-| recall@10 | 0.451 | 0.327 to 0.583 |
-| mrr | 0.837 | 0.702 to 0.962 |
-| ndcg@10 | 0.637 | 0.512 to 0.763 |
+| recall@5 | 0.401 | 0.271 to 0.533 |
+| recall@10 | 0.543 | 0.391 to 0.690 |
+| mrr | 0.841 | 0.703 to 0.957 |
+| ndcg@10 | 0.681 | 0.545 to 0.795 |
 
 | Category | n | recall@5 | recall@10 | mrr | ndcg@10 |
 |---|---|---|---|---|---|
-| exact | 5 | 0.593 | 0.865 | 1.000 | 0.973 |
-| location | 5 | 0.163 | 0.213 | 0.900 | 0.527 |
-| remote | 2 | 0.500 | 0.500 | 0.500 | 0.500 |
-| seniority | 5 | 0.296 | 0.476 | 0.800 | 0.600 |
-| skill | 5 | 0.130 | 0.282 | 0.800 | 0.514 |
-| vague | 4 | 0.262 | 0.390 | 0.812 | 0.621 |
+| exact | 5 | 0.760 | 1.000 | 1.000 | 1.000 |
+| location | 5 | 0.144 | 0.185 | 0.767 | 0.495 |
+| remote | 1 | 0.000 | 0.000 | 0.000 | 0.000 |
+| seniority | 4 | 0.679 | 0.808 | 0.875 | 0.848 |
+| skill | 5 | 0.143 | 0.338 | 0.800 | 0.518 |
+| vague | 3 | 0.422 | 0.544 | 1.000 | 0.734 |

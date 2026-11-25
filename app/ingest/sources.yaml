@@ -1,0 +1,18 @@
+# Boards checked on 2026-11-25. Chosen for India-based openings plus a few large
+# engineering boards. Add more once the embedding quota is known.
+- {source: greenhouse, board: razorpaysoftwareprivatelimited, company: Razorpay}
+- {source: greenhouse, board: groww, company: Groww}
+- {source: greenhouse, board: druva, company: Druva}
+- {source: greenhouse, board: inmobi, company: InMobi}
+- {source: greenhouse, board: rubrik, company: Rubrik}
+- {source: greenhouse, board: okta, company: Okta}
+- {source: greenhouse, board: zscaler, company: Zscaler}
+- {source: greenhouse, board: mongodb, company: MongoDB}
+- {source: greenhouse, board: gitlab, company: GitLab}
+- {source: greenhouse, board: stripe, company: Stripe}
+- {source: lever, board: cred, company: CRED}
+- {source: lever, board: meesho, company: Meesho}
+- {source: lever, board: zeta, company: Zeta}
+- {source: lever, board: paytm, company: Paytm}
+# Remote OK lists only its latest ~100 jobs, so absence is not proof of closure.
+- {source: remoteok, board: remoteok, company: Remote OK, expire_after_days: 30}

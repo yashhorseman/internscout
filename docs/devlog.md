@@ -19,3 +19,5 @@ Then: author chose AI grading; a Claude subagent graded the pool. First chat age
 - The agent quoted job titles as evidence until the prompt said not to.
 - Benchmark on dev: semantic beat hybrid and the re-ranker, against expectation. See failure_analysis.md.
 - Human check of 50 grades: weighted kappa 0.36. Test run held until the grading rules are tightened.
+- Rubric version 2 (author decided: other Indian city = partly; no level asked = seniority ignored; different kind of work = 0). Round-one grades kept as *_round1.
+- Rewrote local history to remove the tracking address before any push.

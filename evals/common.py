@@ -9,6 +9,7 @@ HERE = Path(__file__).parent
 QUERIES = HERE / "queries.jsonl"
 QRELS = HERE / "qrels.jsonl"
 QRELS_CHECK = HERE / "qrels_check.jsonl"  # the author's blind re-grades
+EARLIER_CHECKS = HERE / "qrels_check_round1.jsonl"  # already seen: never sampled again
 POOL = HERE / "pool.json"
 VECTORS = HERE / "query_vectors.json"
 RESULTS = HERE / "results"

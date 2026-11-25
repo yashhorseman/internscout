@@ -20,3 +20,11 @@ def test_preview_keeps_repeated_text_that_follows_the_role():
                 for n in range(4)]
     shown = preview(postings[0][1], repeated_lines(postings)["Acme"])
     assert shown.startswith("The role\nRole number 0") and shown.endswith(ask)
+
+
+def test_check_sample_never_repeats_pairs_already_checked():
+    from evals.label import check_sample
+
+    grades = {"q1": {n: 0 for n in range(10)}}
+    first = set(check_sample(grades, 4))
+    assert not first & set(check_sample(grades, 6, exclude=first))

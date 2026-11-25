@@ -4,7 +4,7 @@
     python -m evals.label --check 50   # grade a random 50 that already have AI grades,
                                        # without seeing them, to measure agreement
 
-2 = clearly what the query asks for, 1 = partly, 0 = no.
+2 = clearly what the query asks for, 1 = partly, 0 = no. Rules: evals/RUBRIC.md
 m = show the whole posting   u = undo   q = quit
 
 The preview skips the paragraphs a company repeats at the start of its postings
@@ -20,7 +20,8 @@ import tty
 
 from app.db import connect
 from app.retrieval.preview import preview, repeated_lines
-from evals.common import POOL, QRELS, QRELS_CHECK, db_url, load_grades, load_queries, read_jsonl
+from evals.common import (EARLIER_CHECKS, POOL, QRELS, QRELS_CHECK, db_url, load_grades,
+                          load_queries, read_jsonl)
 
 
 def wrapped(text: str) -> str:
@@ -37,9 +38,10 @@ def read_key() -> str:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 
-def check_sample(grades: dict[str, dict[int, int]], size: int, seed: int = 0) -> list[tuple[str, int]]:
+def check_sample(grades: dict[str, dict[int, int]], size: int, seed: int = 0,
+                 exclude: set = frozenset()) -> list[tuple[str, int]]:
     """The same random pairs every time, so the check can be stopped and resumed."""
-    pairs = sorted((q, j) for q, jobs in grades.items() for j in jobs)
+    pairs = sorted((q, j) for q, jobs in grades.items() for j in jobs if (q, j) not in exclude)
     return random.Random(seed).sample(pairs, min(size, len(pairs)))
 
 
@@ -51,7 +53,8 @@ def main() -> None:
         sys.exit("run this in a terminal window")
     queries = {q["id"]: q for q in load_queries()}
     if args.check:
-        target, wanted = QRELS_CHECK, check_sample(load_grades(), args.check)
+        seen = {(row["query_id"], row["job_id"]) for row in read_jsonl(EARLIER_CHECKS)}
+        target, wanted = QRELS_CHECK, check_sample(load_grades(), args.check, exclude=seen)
     else:
         target = QRELS
         wanted = [(q, j) for q, jobs in json.loads(POOL.read_text()).items() for j in jobs]

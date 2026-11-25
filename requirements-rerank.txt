@@ -1,0 +1,4 @@
+# Only needed for the re-ranker (large: pulls in PyTorch). Install after requirements.txt.
+sentence-transformers==6.3.0
+torch==2.15.0
+transformers==5.24.1

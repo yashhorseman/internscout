@@ -19,5 +19,10 @@ Only values that were measured or read from a provider's page. Measured 2026-11-
 A 768-number vector from `gemini-embedding-001` is not unit length (a test call
 gave 0.587), so we normalize before storing.
 
-## Free-tier rate limits
-Not recorded yet. Read them from aistudio.google.com/rate-limit.
+## Free-tier rate limits (gemini-embedding-001, from AI Studio)
+- 100 requests per minute, 30,000 tokens per minute
+- Daily limit: not visible on the page we read
+
+## Embedding text
+- Cut at 6,000 characters; 50 sampled postings: median 1,178 tokens, max 1,977, none over 2,048
+- Priority set embedded first: 815 India, intern or entry-level postings

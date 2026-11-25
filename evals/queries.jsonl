@@ -1,0 +1,40 @@
+{"id": "q001", "text": "software engineer intern at stripe", "keywords": ["software", "engineer", "intern"], "filters": {"company": "Stripe", "level": "intern"}, "category": "exact", "split": "dev"}
+{"id": "q002", "text": "product management intern rubrik", "keywords": ["product", "management", "intern"], "filters": {"company": "Rubrik", "level": "intern"}, "category": "exact", "split": "dev"}
+{"id": "q003", "text": "talent acquisition intern paytm", "keywords": ["talent", "acquisition", "intern"], "filters": {"company": "Paytm", "level": "intern"}, "category": "exact", "split": "dev"}
+{"id": "q004", "text": "technical services engineer mongodb", "keywords": ["technical", "services", "engineer"], "filters": {"company": "MongoDB"}, "category": "exact", "split": "dev"}
+{"id": "q005", "text": "new grad software engineer stripe", "keywords": ["software", "engineer", "new", "grad"], "filters": {"company": "Stripe", "level": "entry"}, "category": "exact", "split": "dev"}
+{"id": "q006", "text": "customer success manager at okta", "keywords": ["customer", "success", "manager"], "filters": {"company": "Okta"}, "category": "exact", "split": "test"}
+{"id": "q007", "text": "data scientist at meesho", "keywords": ["data", "scientist"], "filters": {"company": "Meesho"}, "category": "exact", "split": "test"}
+{"id": "q008", "text": "python backend role using postgres", "keywords": ["python", "backend", "postgres"], "filters": {}, "category": "skill", "split": "dev"}
+{"id": "q009", "text": "java developer microservices", "keywords": ["java", "microservices"], "filters": {}, "category": "skill", "split": "dev"}
+{"id": "q010", "text": "kubernetes and devops engineer", "keywords": ["kubernetes", "devops"], "filters": {}, "category": "skill", "split": "dev"}
+{"id": "q011", "text": "frontend developer with react", "keywords": ["frontend", "react"], "filters": {}, "category": "skill", "split": "dev"}
+{"id": "q012", "text": "sql data analysis and dashboards", "keywords": ["sql", "data", "analysis", "dashboards"], "filters": {}, "category": "skill", "split": "dev"}
+{"id": "q013", "text": "golang distributed systems engineer", "keywords": ["golang", "distributed", "systems"], "filters": {}, "category": "skill", "split": "test"}
+{"id": "q014", "text": "machine learning models in production", "keywords": ["machine", "learning", "models"], "filters": {}, "category": "skill", "split": "test"}
+{"id": "q015", "text": "software engineering internship", "keywords": ["software", "engineering", "internship"], "filters": {"level": "intern"}, "category": "seniority", "split": "dev"}
+{"id": "q016", "text": "entry level jobs in data", "keywords": ["data"], "filters": {"level": "entry"}, "category": "seniority", "split": "dev"}
+{"id": "q017", "text": "internship in product management", "keywords": ["product", "management"], "filters": {"level": "intern"}, "category": "seniority", "split": "dev"}
+{"id": "q018", "text": "fresher customer support job", "keywords": ["customer", "support"], "filters": {"level": "entry"}, "category": "seniority", "split": "dev"}
+{"id": "q019", "text": "new graduate security engineer", "keywords": ["security", "engineer", "graduate"], "filters": {"level": "entry"}, "category": "seniority", "split": "dev"}
+{"id": "q020", "text": "machine learning internship", "keywords": ["machine", "learning"], "filters": {"level": "intern"}, "category": "seniority", "split": "test"}
+{"id": "q021", "text": "hr internship", "keywords": ["hr", "human", "resources", "talent"], "filters": {"level": "intern"}, "category": "seniority", "split": "test"}
+{"id": "q022", "text": "software engineer jobs in bengaluru", "keywords": ["software", "engineer", "bengaluru", "bangalore"], "filters": {"country_code": "IN"}, "category": "location", "split": "dev"}
+{"id": "q023", "text": "sales jobs in mumbai", "keywords": ["sales", "mumbai"], "filters": {"country_code": "IN"}, "category": "location", "split": "dev"}
+{"id": "q024", "text": "gurugram engineering roles", "keywords": ["engineering", "engineer", "gurugram", "gurgaon"], "filters": {"country_code": "IN"}, "category": "location", "split": "dev"}
+{"id": "q025", "text": "product manager in noida", "keywords": ["product", "manager", "noida"], "filters": {"country_code": "IN"}, "category": "location", "split": "dev"}
+{"id": "q026", "text": "security jobs in pune", "keywords": ["security", "pune"], "filters": {"country_code": "IN"}, "category": "location", "split": "dev"}
+{"id": "q027", "text": "data analyst bangalore", "keywords": ["data", "analyst", "bangalore", "bengaluru"], "filters": {"country_code": "IN"}, "category": "location", "split": "test"}
+{"id": "q028", "text": "internship in bengaluru", "keywords": ["bangalore", "bengaluru", "intern"], "filters": {"level": "intern", "country_code": "IN"}, "category": "location", "split": "test"}
+{"id": "q029", "text": "remote software engineer in india", "keywords": ["software", "engineer"], "filters": {"is_remote": true, "country_code": "IN"}, "category": "remote", "split": "dev"}
+{"id": "q030", "text": "remote early career job", "keywords": ["associate", "junior"], "filters": {"is_remote": true}, "category": "remote", "split": "dev"}
+{"id": "q031", "text": "remote customer support", "keywords": ["customer", "support"], "filters": {"is_remote": true}, "category": "remote", "split": "test"}
+{"id": "q032", "text": "something where I can work on AI agents as a student", "keywords": ["ai", "agents"], "filters": {}, "category": "vague", "split": "dev"}
+{"id": "q033", "text": "I like helping people solve technical problems", "keywords": ["technical", "support", "customers"], "filters": {}, "category": "vague", "split": "dev"}
+{"id": "q034", "text": "job where I get to break into systems and find security holes", "keywords": ["security", "penetration", "vulnerability"], "filters": {}, "category": "vague", "split": "dev"}
+{"id": "q035", "text": "work that mixes design and talking to users", "keywords": ["design", "user", "research"], "filters": {}, "category": "vague", "split": "dev"}
+{"id": "q036", "text": "I want to build things that handle lots of money safely", "keywords": ["payments", "risk", "fraud"], "filters": {}, "category": "vague", "split": "test"}
+{"id": "q037", "text": "a first job where I can learn how a company sells software", "keywords": ["sales", "development", "associate"], "filters": {}, "category": "vague", "split": "test"}
+{"id": "q038", "text": "mechanical engineer CAD design", "keywords": ["mechanical", "cad"], "filters": {}, "category": "no_answer", "split": "dev"}
+{"id": "q039", "text": "staff nurse in a hospital", "keywords": ["nurse", "hospital"], "filters": {}, "category": "no_answer", "split": "dev"}
+{"id": "q040", "text": "quantum computing research internship", "keywords": ["quantum"], "filters": {"level": "intern"}, "category": "no_answer", "split": "test"}

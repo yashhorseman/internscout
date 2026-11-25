@@ -6,4 +6,5 @@ Broke and fixed:
 - Re-running ingestion rewrote every row (63 MB grew to 115 MB). Unchanged rows now only get last_seen_at.
 - Keyword search ignored the full-text index after bulk writes. Ingestion now runs `vacuum analyze`.
 - Locations such as "Mohali, IND" had no country.
-Next: embeddings and the four search modes.
+Later: embedding worker, four search modes, benchmark tools and 40 draft queries; 45 tests.
+Next: finish embedding, freeze the snapshot, label.

@@ -1,12 +1,34 @@
 # Retrieval benchmark: development-set results (2026-11-25)
 
 **Read the caveats first.** The queries were written by an AI assistant and the relevance
-grades were assigned by an AI (a Claude subagent). No human check of the grades has been done
-yet, and the 12 held-out test queries have not been run.
+grades were assigned by an AI (a Claude subagent). A blind human re-grade of 50 pairs agreed
+poorly with it (below). The 12 held-out test queries have not been run.
 
 Setup: 815 frozen postings; 40 queries, 28 in the development set, of which 26 have at least one
 relevant posting; 950 graded query-posting pairs (429 not relevant, 257 partly, 264 relevant).
 Every result in every setting below was graded.
+
+## Human check of the grades
+The author re-graded 50 random pairs without seeing the AI grades.
+
+| Measure | Value |
+|---|---|
+| Same grade | 46% |
+| Same on relevant (1 or 2) against not (0) | 64% |
+| Quadratic weighted kappa | 0.36 (low) |
+
+Much of the gap is the middle grade: the AI gave "partly" 21 times, the author 6. Six pairs got
+opposite verdicts (0 against 2).
+
+Does the mode order depend on how "partly" is read? Using the AI grades, NDCG@10:
+
+| "Partly" counts as | keyword | semantic | hybrid | re-ranked | semantic minus hybrid |
+|---|---|---|---|---|---|
+| partly (as graded) | 0.614 | 0.897 | 0.797 | 0.764 | +0.100 (0.037 to 0.173) |
+| not relevant (23 queries) | 0.553 | 0.842 | 0.779 | 0.771 | +0.063 (0.002 to 0.127) |
+| fully relevant | 0.774 | 0.965 | 0.885 | 0.826 | +0.080 (0.020 to 0.152) |
+
+The order holds. This does not cover disagreements about relevant against not relevant.
 
 ## Search modes
 | Mode | Recall@5 | Recall@10 | MRR | NDCG@10 (95% interval) | p50 time |
@@ -47,9 +69,9 @@ Groups this small show where to look, not which mode wins.
 | E4 | 100 instead of 50 | -0.027 (-0.047 to -0.009) |
 
 ## Caveats
-- An AI grader may favour what an embedding model also finds similar, which would flatter
-  semantic search. A blind human re-grade of a sample is the check
-  (`python -m evals.label --check 50`, then `python -m evals.agreement`).
+- An AI grader may favour what an embedding model also finds similar. In the 50 checked pairs the
+  AI was more generous than the author for keyword results (75% relevant against 62%) as well as
+  semantic ones (71% against 62%); too few pairs to rule a bias out.
 - The keyword lists in the queries were also AI-written; keyword and hybrid depend on them.
 - Eleven comparisons with no correction for multiple testing: small "clear" differences such
   as hybrid AND vs OR may be chance.

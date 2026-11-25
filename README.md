@@ -8,8 +8,9 @@ A job-search agent over a refreshed index of real job postings. **Work in progre
 | Ingestion from public job-board APIs, change detection, safe expiry | Done |
 | Postgres schema, versioned migrations, full-text index | Done |
 | Embeddings and keyword / semantic / hybrid / re-ranked search | Done |
-| Retrieval benchmark | Tools ready; labeling next |
-| Chat agent, grounding checks, deployment, daily schedule | Planned |
+| Retrieval benchmark | AI-graded; results being produced |
+| Chat agent (tools, memory, checked answers) and web page | First version, runs locally |
+| Grounding evaluation, deployment, daily schedule | Planned |
 
 ## Run locally
 Needs Python 3.13 and Docker (or Colima).
@@ -25,6 +26,11 @@ Needs Python 3.13 and Docker (or Colima).
 ## Search
     python -m app.embed --priority-only
     python -m app.retrieval.cli "python backend internship" --mode hybrid --level intern
+
+## Chat agent
+    uvicorn app.api:app          # then open http://127.0.0.1:8000
+
+How it works: docs/walkthrough/03-agent.md.
 
 ## Retrieval benchmark
     pip install -r requirements-rerank.txt

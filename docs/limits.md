@@ -40,3 +40,8 @@ Query vectors were already cached, so the embedding call is not included.
 | hybrid_rerank | 173.9 | 210.7 |
 
 Embedding one query through the API: median 425 ms (only 5 calls, a rough figure).
+
+## Chat model (2026-11-25)
+`gemini-3.5-flash-lite`, set by CHAT_MODEL. Of the Flash models probed once each, it was the only
+one that answered (others: 503, 504, or closed to new keys). Free-tier limits not yet recorded.
+It often returns 503. First live conversation: 12 to 62 s per turn.

@@ -14,4 +14,6 @@ Broke and fixed:
 - The labeling screen showed the first 500 characters, which for most companies was "about us" text.
 - Remote OK sends garbled punctuation (UTF-8 read as latin-1). Repaired on import; the frozen corpus
   still has 3 affected postings.
-Next: author labels the pool.
+Then: author chose AI grading; a Claude subagent graded the pool. First chat agent and page built.
+- Remote OK appends a line holding the requester's IP in base64; it had reached a committed test file.
+- The agent quoted job titles as evidence until the prompt said not to.

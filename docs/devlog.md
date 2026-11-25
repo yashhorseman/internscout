@@ -22,3 +22,4 @@ Then: author chose AI grading; a Claude subagent graded the pool. First chat age
 - Rubric version 2 (author decided: other Indian city = partly; no level asked = seniority ignored; different kind of work = 0). Round-one grades kept as *_round1.
 - Rewrote local history to remove the tracking address before any push.
 - Regraded under rubric 2. Semantic still ahead of hybrid (+0.05); two earlier "clear" setting effects vanished.
+- Author: the first check was not graded by the rubric. The grading screen now shows the rules.

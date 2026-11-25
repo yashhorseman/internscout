@@ -24,6 +24,13 @@ from evals.common import (EARLIER_CHECKS, POOL, QRELS, QRELS_CHECK, db_url, load
                           load_queries, read_jsonl)
 
 
+# short form of evals/RUBRIC.md, shown under every posting
+REMINDER = """\
+Different kind of work -> 0, even at the named company. No level asked -> seniority is fine.
+1 (only for the right work): other Indian city | hybrid when remote asked | only some skills
+  | entry search wanting 1-2 years.   Two of these, or senior on intern/entry search -> 0."""
+
+
 def wrapped(text: str) -> str:
     return "\n".join(textwrap.fill(line, 100) for line in text.splitlines())
 
@@ -79,6 +86,7 @@ def main() -> None:
             remote = " | remote" if is_remote else ""
             print(f"{title}\n{company} | {location or 'location not stated'}{remote} | level: {level}\n")
             print(wrapped(text if full else preview(text, repeated.get(company, set()))))
+            print("\n" + REMINDER)
             print("\n[2] yes   [1] partly   [0] no   [m] more/less   [u] undo   [q] quit ", end="", flush=True)
             key = read_key()
             if key == "q":

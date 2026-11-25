@@ -53,7 +53,9 @@ None of these changes made a distinguishable difference in NDCG@10, so the defau
 ## How the grading rules were arrived at
 Round one: the author re-graded 50 random pairs without seeing the AI grades. Agreement was
 poor: same grade 46%, same on relevant against not relevant 64%, quadratic weighted kappa 0.36.
-The rubric was loose about partial matches. The author decided three rules (another Indian city
+The author said afterwards that they had graded by their own judgment, not by the written
+rubric, so this figure does not measure how well two graders apply the same rules. Looking at
+the disagreements showed the rubric was loose about partial matches. The author decided three rules (another Indian city
 is "partly"; if no level is asked, seniority does not matter; a different kind of work is 0), the
 AI regraded all 950 pairs from scratch, and 81% of grades stayed the same.
 

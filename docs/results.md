@@ -1,15 +1,36 @@
-# Retrieval benchmark: development-set results (2026-11-25)
+# Retrieval benchmark (2026-11-25 and 26)
 
 **Read this first.** The queries were written by an AI assistant and the relevance grades were
 assigned by an AI (a Claude subagent) under rubric version 2. A blind human check of these grades
 agreed only **moderately** (weighted kappa 0.45, see below), so treat the numbers as indicative.
-The 12 held-out test queries have not been run.
+The held-out test queries were run **once**, on 2026-11-26, after every setting was fixed.
 
 Setup: 815 frozen postings; 40 queries, 28 in the development set, of which 23 have at least one
 relevant posting; 950 graded query-posting pairs (577 not relevant, 90 partly, 283 relevant).
 Every result in every setting below was graded.
 
-## Search modes
+## Test set (run once)
+12 held-out queries, 10 with at least one relevant posting. Settings as chosen before the run.
+
+| Mode | Recall@5 | Recall@10 | MRR | NDCG@10 (95% interval) |
+|---|---|---|---|---|
+| keyword | 0.445 | 0.642 | 0.633 | 0.571 (0.342 to 0.785) |
+| semantic | 0.493 | 0.759 | 0.817 | 0.803 (0.631 to 0.933) |
+| hybrid | 0.584 | 0.776 | 0.950 | **0.839** (0.677 to 0.955) |
+| hybrid + re-ranker | 0.482 | 0.619 | 0.917 | 0.719 (0.545 to 0.859) |
+
+Paired differences in NDCG@10:
+- hybrid over keyword: +0.269 (0.130 to 0.432)
+- semantic minus hybrid: -0.036 (-0.178 to 0.093), not distinguishable
+- re-ranked minus hybrid: -0.120 (-0.191 to -0.046)
+- re-ranked minus semantic: -0.084 (-0.241 to 0.081), not distinguishable
+
+What holds on both sets: hybrid clearly beats keyword search. What does **not** hold: the
+development set put semantic ahead of hybrid, and the test set does not. The re-ranker did not
+help on either. The default stayed hybrid, which is also the only choice that finds postings
+without embeddings. Ten queries is a very small test set.
+
+## Development set: search modes
 | Mode | Recall@5 | Recall@10 | MRR | NDCG@10 (95% interval) | p50 time |
 |---|---|---|---|---|---|
 | keyword | 0.383 | 0.604 | 0.738 | 0.633 (0.516 to 0.743) | 1.7 ms |

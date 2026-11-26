@@ -8,14 +8,22 @@ A job-search agent over a refreshed index of real job postings. **Work in progre
 | Ingestion from public job-board APIs, change detection, safe expiry | Done |
 | Postgres schema, versioned migrations, full-text index | Done |
 | Embeddings and keyword / semantic / hybrid / re-ranked search | Done |
-| Retrieval benchmark | Development-set results; human check agreed moderately; test run to do |
+| Retrieval benchmark | Done; human check of the AI grades agreed only moderately |
 | Chat agent (tools, memory, checked answers) and web page | First version, runs locally |
 | Grounding evaluation, deployment, daily schedule | Planned |
 
-## First benchmark results (development set)
-NDCG@10 on 23 development queries over 815 real postings, **graded by an AI**: keyword 0.63,
-hybrid with re-ranker 0.79, hybrid 0.81, semantic 0.86. A blind human re-grade of 50 pairs agreed
+## Benchmark results
+NDCG@10 over 815 real postings, **graded by an AI**. A blind human re-grade of 50 pairs agreed
 only moderately (weighted kappa 0.45).
+
+| Mode | Development (23 queries) | Test, run once (10 queries) |
+|---|---|---|
+| keyword | 0.633 | 0.571 |
+| semantic | 0.861 | 0.803 |
+| hybrid | 0.811 | 0.839 |
+| hybrid + re-ranker | 0.789 | 0.719 |
+
+Hybrid clearly beats keyword search on both. Semantic against hybrid is not settled.
 Details and caveats: [docs/results.md](docs/results.md);
 failures: [docs/failure_analysis.md](docs/failure_analysis.md).
 

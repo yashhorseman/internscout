@@ -18,19 +18,40 @@ def weighted_kappa(pairs: list[tuple[int, int]], levels: int = 3) -> float:
     return 1.0 if expected == 0 else 1 - observed / expected
 
 
-def main() -> None:
-    ai = load_grades()
-    mine = {(r["query_id"], r["job_id"]): r["grade"] for r in read_jsonl(QRELS_CHECK)}
+def split_grades(rows: list[dict]) -> tuple[dict, dict]:
+    """(blind grades, grades after corrections). A correction is a later row marked
+    after_seeing_ai: the grader had seen the AI grade, so it is not part of the blind check."""
+    blind, corrected = {}, {}
+    for row in rows:
+        key = (row["query_id"], row["job_id"])
+        if not row.get("after_seeing_ai"):
+            blind[key] = row["grade"]
+        corrected[key] = row["grade"]
+    return blind, corrected
+
+
+def report(title: str, mine: dict, ai: dict) -> None:
     pairs = [(grade, ai[q][j]) for (q, j), grade in mine.items() if j in ai.get(q, {})]
-    if not pairs:
-        sys.exit("no check grades yet: run python -m evals.label --check 50")
+    print(f"\n== {title} ==")
     print(f"pairs checked: {len(pairs)}")
     print(f"same grade: {sum(a == b for a, b in pairs) / len(pairs):.0%}")
     print(f"same on relevant (1 or 2) vs not (0): {sum((a > 0) == (b > 0) for a, b in pairs) / len(pairs):.0%}")
     print(f"quadratic weighted kappa: {weighted_kappa(pairs):.2f}")
-    print("\nrows: your grade, columns: AI grade\n      0    1    2")
+    print("rows: your grade, columns: AI grade\n      0    1    2")
     for a in range(3):
         print(f"{a}  " + "".join(f"{sum(p == (a, b) for p in pairs):>5}" for b in range(3)))
+
+
+def main() -> None:
+    ai = load_grades()
+    rows = read_jsonl(QRELS_CHECK)
+    if not rows:
+        sys.exit("no check grades yet: run python -m evals.label --check 50")
+    blind, corrected = split_grades(rows)
+    report("blind check (quote this one)", blind, ai)
+    if corrected != blind:
+        changed = sum(blind[k] != corrected[k] for k in blind)
+        report(f"after {changed} corrections made with the AI grades visible (not blind)", corrected, ai)
 
 
 if __name__ == "__main__":

@@ -24,3 +24,5 @@ Then: author chose AI grading; a Claude subagent graded the pool. First chat age
 - Regraded under rubric 2. Semantic still ahead of hybrid (+0.05); two earlier "clear" setting effects vanished.
 - Author: the first check was not graded by the rubric. The grading screen now shows the rules.
 - 2026-11-26: second blind check (50 new pairs): weighted kappa 0.45; grades left unchanged.
+- 2026-11-26: author corrected 5 of their check grades after seeing the AI's (blind kappa 0.45 stays the headline; 0.64 after).
+- 2026-11-26: test split run once. Hybrid 0.839, semantic 0.803: the development lead of semantic did not hold.

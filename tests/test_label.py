@@ -1,3 +1,4 @@
+from evals.agreement import split_grades
 from evals.label import preview, repeated_lines
 
 ABOUT = "Acme is a company that has been doing wonderful things for a very long time indeed."
@@ -28,3 +29,11 @@ def test_check_sample_never_repeats_pairs_already_checked():
     grades = {"q1": {n: 0 for n in range(10)}}
     first = set(check_sample(grades, 4))
     assert not first & set(check_sample(grades, 6, exclude=first))
+
+
+def test_corrections_do_not_change_the_blind_grades():
+    rows = [{"query_id": "q1", "job_id": 1, "grade": 2},
+            {"query_id": "q1", "job_id": 1, "grade": 0, "after_seeing_ai": True}]
+    blind, corrected = split_grades(rows)
+    assert blind == {("q1", 1): 2}
+    assert corrected == {("q1", 1): 0}

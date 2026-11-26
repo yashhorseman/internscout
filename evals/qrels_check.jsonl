@@ -48,3 +48,8 @@
 {"query_id": "q022", "job_id": 2387, "grade": 2}
 {"query_id": "q040", "job_id": 1117, "grade": 2}
 {"query_id": "q025", "job_id": 2776, "grade": 2}
+{"query_id": "q025", "job_id": 2705, "grade": 0, "after_seeing_ai": true}
+{"query_id": "q026", "job_id": 2553, "grade": 0, "after_seeing_ai": true}
+{"query_id": "q040", "job_id": 1117, "grade": 0, "after_seeing_ai": true}
+{"query_id": "q037", "job_id": 1768, "grade": 0, "after_seeing_ai": true}
+{"query_id": "q037", "job_id": 2705, "grade": 0, "after_seeing_ai": true}

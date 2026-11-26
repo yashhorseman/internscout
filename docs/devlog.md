@@ -23,3 +23,4 @@ Then: author chose AI grading; a Claude subagent graded the pool. First chat age
 - Rewrote local history to remove the tracking address before any push.
 - Regraded under rubric 2. Semantic still ahead of hybrid (+0.05); two earlier "clear" setting effects vanished.
 - Author: the first check was not graded by the rubric. The grading screen now shows the rules.
+- 2026-11-26: second blind check (50 new pairs): weighted kappa 0.45; grades left unchanged.

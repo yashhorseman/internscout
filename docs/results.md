@@ -1,9 +1,9 @@
 # Retrieval benchmark: development-set results (2026-11-25)
 
 **Read this first.** The queries were written by an AI assistant and the relevance grades were
-assigned by an AI (a Claude subagent) under rubric version 2. These numbers are **provisional**:
-a blind human check of the new grades is still to be done, and the 12 held-out test queries have
-not been run.
+assigned by an AI (a Claude subagent) under rubric version 2. A blind human check of these grades
+agreed only **moderately** (weighted kappa 0.45, see below), so treat the numbers as indicative.
+The 12 held-out test queries have not been run.
 
 Setup: 815 frozen postings; 40 queries, 28 in the development set, of which 23 have at least one
 relevant posting; 950 graded query-posting pairs (577 not relevant, 90 partly, 283 relevant).
@@ -69,6 +69,14 @@ The rules changed the conclusions, which is worth knowing:
 | queries scored | 26 | 23 |
 
 Round-one files: `evals/qrels_round1.jsonl`, `evals/qrels_check_round1.jsonl`.
+
+Round two: the author blind re-graded 50 new pairs (none from round one). Same grade 68%, same on
+relevant against not relevant 72%, quadratic weighted kappa 0.45. Of the 16 disagreements, 11 were
+pairs the author graded 2 and the AI graded 0, so the author counted more postings as relevant.
+Several of those turn on how close a neighbouring job must be to count as the same work, or go
+against the written rubric as it reads. Neither set of grades was changed afterwards. The scores
+above use the AI grades, and a different grader could change them, including the small lead of
+semantic over hybrid. Files: `evals/qrels_check.jsonl`, `python -m evals.agreement`.
 
 ## Caveats
 - An AI grader may favour what an embedding model also finds similar.

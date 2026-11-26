@@ -59,3 +59,20 @@ check again before deploying).
 
 **Decision:** deploy `hybrid`, not `hybrid_rerank`. The plan's rule is to drop the re-ranker above
 80% of the host's memory (410 MB); it needs 828 MB. It also did not help on either benchmark set.
+
+## Chat model free quota (observed 2026-11-26)
+`gemini-3.5-flash-lite`: **500 requests per day** per project
+(`GenerateRequestsPerDayPerProjectPerModel-FreeTier`, from the error returned when it ran out).
+Google resets daily quotas at midnight Pacific time. A turn takes about 5 requests, so this is
+roughly **100 conversation turns a day for everyone together**. A user study has to fit in that.
+
+## Load test with a stand-in model (2026-11-26, M2 laptop)
+`scripts/load_test.py` against `scripts/fake_server.py`: one server process, local database copy
+with 815 embedded postings, 20 users for 120 s.
+
+| Requests | Per second | Errors | p50 | p95 |
+|---|---|---|---|---|
+| 10,429 | 86.8 | 0 | 222 ms | 320 ms |
+
+This measures the app and database only. With the real model a turn takes seconds, and the daily
+quota above runs out long before the server does. Not measured on a 0.1 CPU free host.

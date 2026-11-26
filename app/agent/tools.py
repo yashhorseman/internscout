@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from pydantic import ValidationError
 
 from app.agent import schemas, store
+from app.retrieval.personal import personal_search, profile_vector
 from app.retrieval.preview import preview, repeated_lines
 from app.retrieval.query import embed_query
 from app.retrieval.search import FILTER_KEYS, search
@@ -45,7 +46,15 @@ def search_jobs(ctx: Context, args: schemas.SearchJobs) -> dict:
     except Exception as exc:  # no embedding: keyword search still works
         log.warning("query embedding failed, using keyword search: %s", type(exc).__name__)
         mode = "keyword"
-    hits = search(ctx.conn, args.query_text, vector, filters, args.k, mode, keywords=args.keywords)
+    liked, disliked = store.liked_and_disliked(ctx.conn, ctx.session_id)
+    wanted = args.k + len(disliked)  # a disliked job is never shown again, so fetch spares
+    profile = profile_vector(ctx.conn, liked, disliked) if vector and (liked or disliked) else None
+    if profile is not None:
+        hits = personal_search(ctx.conn, args.query_text, vector, profile, filters, wanted,
+                               keywords=args.keywords)
+    else:
+        hits = search(ctx.conn, args.query_text, vector, filters, wanted, mode, keywords=args.keywords)
+    hits = [h for h in hits if h.job_id not in disliked][:args.k]
     short = about_role(ctx.conn, [(h.company, h.description) for h in hits], SNIPPET_CHARS) if hits else []
     for hit in hits:
         ctx.seen.add(hit.job_id)

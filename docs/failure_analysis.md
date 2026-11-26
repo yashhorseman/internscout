@@ -30,8 +30,25 @@ Grade 2 = what was asked, 1 = partly, 0 = no. "Relevant" counts grades 1 and 2.
 
 ## Experiment: what the re-ranker reads
 Hypothesis: the re-ranker did poorly because the first 1,000 characters it reads are often the
-company's introduction (the whole of them in 33% of postings). Change tried: give it the text
-from where the role starts. Result: see `evals/results/rerank_passage.md`.
+company's introduction (the whole of them in 33% of postings). Change: give it the text from where
+the role starts. **The hypothesis was not supported:** NDCG@10 went from 0.751 to 0.724
+(difference -0.028, 95% interval -0.114 to +0.050), still below plain hybrid at 0.770. The model
+itself, trained on web search rather than job postings, may be the limit. Not adopted.
+Table: `evals/results/rerank_passage.md`.
 
 ## Experiment: personalisation from one like (E6)
-Result: see `evals/results/e6_personalization.md`.
+| | hybrid | hybrid + one like | Difference (95% interval) |
+|---|---|---|---|
+| Recall@10 | 0.621 | 0.666 | +0.045 (+0.007 to +0.091) |
+| NDCG@10 | 0.805 | 0.848 | +0.043 (+0.003 to +0.089) |
+
+A small gain on 22 development queries and 210 simulated likes, so the agent now uses likes and
+dislikes. Read it with care: the lower end of the interval is close to zero, it was not checked on
+the test set, near-identical postings at one company may account for much of it, and the weight
+given to dislikes (0.5) was not tested at all.
+
+**A lesson from this run:** before the newly surfaced postings were graded, the same experiment
+showed no gain (NDCG@10 -0.015), because every ungraded posting counted as irrelevant.
+
+These two experiments use extra grades (`evals/qrels_extra.jsonl`, 203 pairs, same AI grading
+rules) for every arm, so their plain-hybrid figures differ from the benchmark tables.

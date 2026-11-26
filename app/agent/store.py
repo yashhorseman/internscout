@@ -49,6 +49,14 @@ def save_feedback(conn, session_id: str, job_id: int, signal: str) -> None:
                  " on conflict do nothing", (session_id, job_id, signal))
 
 
+def liked_and_disliked(conn, session_id: str) -> tuple[list[int], list[int]]:
+    """Saving a job counts as liking it."""
+    rows = conn.execute("select job_id, signal from feedback where session_id = %s", (session_id,)).fetchall()
+    disliked = {job_id for job_id, signal in rows if signal == "dislike"}
+    liked = {job_id for job_id, signal in rows if signal in ("like", "save")} - disliked
+    return sorted(liked), sorted(disliked)
+
+
 def log_llm_call(conn, session_id, model, latency_ms, ok, prompt_version,
                  input_tokens=None, output_tokens=None, error=None, kind="chat") -> None:
     conn.execute(

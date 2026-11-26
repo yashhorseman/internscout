@@ -2,7 +2,7 @@
 
     python -m evals.personalization      # development queries only
 
-For each query, each posting graded 2 takes a turn as the liked one. It is removed from both
+For each query, each posting the benchmark graded 2 takes a turn as the liked one. It is removed from both
 rankings and from the grades, so nothing is gained by merely returning it.
 """
 import json
@@ -18,13 +18,15 @@ METRICS = ("recall@5", "recall@10", "mrr", "ndcg@10")
 def main() -> None:
     queries = [q for q in load_queries() if q["split"] == "dev"]
     vectors, grades = query_vectors(queries), load_grades(extra=True)
+    original = load_grades()  # which postings get liked is fixed by the benchmark grades
     plain_scores, personal_scores, unlabeled, shown, trials = {}, {}, 0, 0, 0
     ungraded = set()
     with connect(db_url()) as conn:
         for query in queries:
             known = grades.get(query["id"], {})
-            liked = sorted(j for j, g in known.items() if g == 2)
-            if sum(g > 0 for g in known.values()) < 2 or not liked:
+            base = original.get(query["id"], {})
+            liked = sorted(j for j, g in base.items() if g == 2)
+            if sum(g > 0 for g in base.values()) < 2 or not liked:
                 continue
             runs = {"plain": [], "personal": []}
             for job_id in liked:

@@ -225,3 +225,28 @@ def test_spent_budget_skips_the_model(db, jobs, monkeypatch):
     script = Script()
     reply = turn(db, store.create_session(db), script, "python")
     assert reply["outcome"] == "budget" and reply["cards"] and script.seen == []
+
+
+def test_a_like_changes_the_order_and_a_dislike_removes(db, jobs):
+    from app.agent import tools
+
+    def vector(*head):
+        return str(list(head) + [0.0] * (768 - len(head)))
+
+    # the query is nearest "evil", then "remote"; a like for "py" adds a second ranking
+    for key, values in (("py", (0.0, 1.0)), ("remote", (0.1, 1.0)), ("evil", (1.0, 0.0))):
+        db.execute("update jobs set embedding = %s::vector, embedding_stale = false where id = %s",
+                   (vector(*values), jobs[key]))
+    session = store.create_session(db)
+    ctx = tools.Context(db, session, set(), embed=embed)
+
+    def search_ids():
+        result = tools.execute(ctx, "search_jobs", {"keywords": ["zzz"], "query_text": "anything"})
+        return [j["job_id"] for j in result["jobs"]]
+
+    assert search_ids() == [jobs["evil"], jobs["remote"], jobs["py"]]
+    store.save_feedback(db, session, jobs["py"], "like")
+    after = search_ids()  # the liked posting's neighbourhood joins the fusion
+    assert after.index(jobs["py"]) < after.index(jobs["remote"])
+    store.save_feedback(db, session, jobs["evil"], "dislike")
+    assert jobs["evil"] not in search_ids()

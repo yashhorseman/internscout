@@ -3,6 +3,7 @@ Prompt v2; 55 finished turns (40 benchmark queries and 15 with no answer).
 ## End to end
 | Measure | Value |
 |---|---|
+| Turns that used all 5 tool steps | 13/55 = 24% (14% to 36%) |
 | Turns that called search_jobs | 55/55 = 100% (93% to 100%) |
 | First answer rejected (schema, id, quote or claim) | 3/55 = 5% (2% to 15%) |
 | Ended without a usable answer | 14/55 = 25% (16% to 38%) |
@@ -11,12 +12,14 @@ Prompt v2; 55 finished turns (40 benchmark queries and 15 with no answer).
 | Model calls per turn, median | 5 |
 
 ## Against plain retrieval (same queries, same grades)
-| Ranked list | Queries | Recall@5 | NDCG@10 | Plain hybrid Recall@5 | Plain hybrid NDCG@10 |
-|---|---|---|---|---|---|
-| What the agent's searches returned | 33 | 0.398 | 0.616 | 0.507 | 0.820 |
-| What the agent recommended (at most 5) | 33 | 0.312 | 0.458 | 0.507 | 0.820 |
+| Ranked list | Split | Queries | Recall@5 | NDCG@10 | Plain hybrid Recall@5 | Plain hybrid NDCG@10 |
+|---|---|---|---|---|---|---|
+| What the agent's searches returned | dev | 24 | 0.331 | 0.607 | 0.421 | 0.770 |
+| What the agent's searches returned | test | 10 | 0.444 | 0.598 | 0.579 | 0.839 |
+| What the agent recommended (at most 5) | dev | 24 | 0.258 | 0.421 | 0.421 | 0.770 |
+| What the agent recommended (at most 5) | test | 10 | 0.357 | 0.507 | 0.579 | 0.839 |
 
-Recommended jobs with no grade (counted as not relevant): 8 of 112.
+Recommended jobs with no grade (counted as not relevant): 0 of 112.
 
 ## Grounding: before (A) and after (B) the checks
 | Measure | A: first answer | B: shown to the user |

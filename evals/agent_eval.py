@@ -35,6 +35,7 @@ def run_one(conn, query: dict) -> dict:
             "cards": [{k: c[k] for k in ("job_id", "title", "company", "why", "evidence")}
                       for c in reply["cards"]],
             "first_answer": trace["first_answer"], "rejections": trace["rejections"],
+            "hit_step_limit": trace["hit_step_limit"],
             "found": trace["found"], "seen": trace["seen"], "tools": tools,
             "model_calls": calls, "input_tokens": tokens_in, "output_tokens": tokens_out}
 
@@ -45,6 +46,7 @@ def main() -> int:
     todo = [q for q in queries if q["id"] not in done]
     with connect(db_url()) as conn:
         migrate(conn)
+        AGENT_RUNS.parent.mkdir(parents=True, exist_ok=True)
         for number, query in enumerate(todo, start=1):
             record = run_one(conn, query)
             if record["outcome"] in ("model_busy",):  # overload passes; try once more

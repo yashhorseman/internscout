@@ -2,6 +2,7 @@
 
     python -m evals.agent_report
 """
+import argparse
 import math
 from statistics import median
 
@@ -9,7 +10,7 @@ from app.agent import loop, verify
 from app.agent.schemas import AgentReply
 from app.db import connect
 from app.retrieval.search import search
-from evals.common import (AGENT_RUNS, JUDGEMENTS, NO_ANSWER, RESULTS, db_url, load_grades,
+from evals.common import (AGENT_DIR, NO_ANSWER, db_url, load_grades,
                           load_queries, query_vectors, read_jsonl)
 from evals.metrics import score_query
 
@@ -71,11 +72,15 @@ def grounding(conn, runs: list[dict], verdicts: dict, version: str) -> dict:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--version", default=loop.PROMPT_VERSION, help="which prompt's runs to report")
+    version = parser.parse_args().version
+    folder = AGENT_DIR.parent / version
     queries = {q["id"]: q for q in load_queries()}
     impossible = {q["id"] for q in read_jsonl(NO_ANSWER)}
     grades = load_grades(extra=True)
-    runs = [r for r in read_jsonl(AGENT_RUNS) if r["outcome"] not in UNFINISHED]
-    verdicts = {(r["id"], r["job_id"], r["why"]): r["supported"] for r in read_jsonl(JUDGEMENTS)}
+    runs = [r for r in read_jsonl(folder / "runs.jsonl") if r["outcome"] not in UNFINISHED]
+    verdicts = {(r["id"], r["job_id"], r["why"]): r["supported"] for r in read_jsonl(folder / "judge.jsonl")}
     total = len(runs)
 
     scored, unlabeled, ranked_total = {"recommended": [], "searched": []}, 0, 0
@@ -102,9 +107,10 @@ def main() -> None:
             if scores:
                 baseline[query["id"]] = scores
 
-    lines = [f"Prompt {loop.PROMPT_VERSION}; {total} finished turns "
+    lines = [f"Prompt {version}; {total} finished turns "
              f"({len(queries)} benchmark queries and {len(impossible)} with no answer).", "",
              "## End to end", "| Measure | Value |", "|---|---|",
+             f"| Turns that used all {loop.MAX_STEPS} tool steps | {rate(sum(r['outcome'] == 'step_limit' or r.get('hit_step_limit', False) for r in runs), total)} |",
              f"| Turns that called search_jobs | {rate(sum(any(t['name'] == 'search_jobs' for t in r['tools']) for r in runs), total)} |",
              f"| First answer rejected (schema, id, quote or claim) | {rate(sum(r['repairs'] > 0 for r in runs), total)} |",
              f"| Ended without a usable answer | {rate(sum(r['outcome'] != 'ok' for r in runs), total)} |",
@@ -112,16 +118,19 @@ def main() -> None:
              f"| Tokens per turn, median (input + output) | {median(r['input_tokens'] + r['output_tokens'] for r in runs):,.0f} |",
              f"| Model calls per turn, median | {median(r['model_calls'] for r in runs):.0f} |",
              "", "## Against plain retrieval (same queries, same grades)",
-             "| Ranked list | Queries | Recall@5 | NDCG@10 | Plain hybrid Recall@5 | Plain hybrid NDCG@10 |",
-             "|---|---|---|---|---|---|"]
+             "| Ranked list | Split | Queries | Recall@5 | NDCG@10 | Plain hybrid Recall@5 | Plain hybrid NDCG@10 |",
+             "|---|---|---|---|---|---|---|"]
     for name, label in (("searched", "What the agent's searches returned"),
                         ("recommended", "What the agent recommended (at most 5)")):
-        rows = [(q, s) for q, s in scored[name] if q in baseline]
-        mean = lambda values: sum(values) / len(values)
-        lines.append(f"| {label} | {len(rows)} | {mean([s['recall@5'] for _, s in rows]):.3f} | "
-                     f"{mean([s['ndcg@10'] for _, s in rows]):.3f} | "
-                     f"{mean([baseline[q]['recall@5'] for q, _ in rows]):.3f} | "
-                     f"{mean([baseline[q]['ndcg@10'] for q, _ in rows]):.3f} |")
+        for split in ("dev", "test"):
+            rows = [(q, s) for q, s in scored[name] if q in baseline and queries[q]["split"] == split]
+            if not rows:
+                continue
+            mean = lambda values: sum(values) / len(values)
+            lines.append(f"| {label} | {split} | {len(rows)} | {mean([s['recall@5'] for _, s in rows]):.3f} | "
+                         f"{mean([s['ndcg@10'] for _, s in rows]):.3f} | "
+                         f"{mean([baseline[q]['recall@5'] for q, _ in rows]):.3f} | "
+                         f"{mean([baseline[q]['ndcg@10'] for q, _ in rows]):.3f} |")
     lines += ["", f"Recommended jobs with no grade (counted as not relevant): {unlabeled} of {ranked_total}."]
 
     with connect(db_url()) as conn:
@@ -144,7 +153,7 @@ def main() -> None:
     lines += [f"- {r['id']} ({len(r['cards'])} cards): {r['message']}" for r in none]
 
     text = "\n".join(lines) + "\n"
-    (RESULTS / "agent" / "report.md").write_text(text)
+    (folder / "report.md").write_text(text)
     print(text)
 
 

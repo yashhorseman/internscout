@@ -78,6 +78,7 @@ def main() -> int:
     done = {r["name"] for r in read_jsonl(CONVERSATIONS)}
     with connect(db_url()) as conn:
         migrate(conn)
+        CONVERSATIONS.parent.mkdir(parents=True, exist_ok=True)
         for name, messages, checks in CASES:
             if name in done:
                 continue

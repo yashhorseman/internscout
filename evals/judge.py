@@ -69,6 +69,7 @@ def main() -> int:
     for query_id, job_id, why in explanations(read_jsonl(AGENT_RUNS)):
         if (query_id, job_id, why) not in done:
             todo.setdefault(query_id, []).append((job_id, why))
+    JUDGEMENTS.parent.mkdir(parents=True, exist_ok=True)
     with connect(db_url()) as conn:
         for number, (query_id, items) in enumerate(todo.items(), start=1):
             try:

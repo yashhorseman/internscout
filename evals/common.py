@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+from app.agent.loop import PROMPT_VERSION
 from app.config import settings
 
 HERE = Path(__file__).parent
@@ -17,9 +18,10 @@ VECTORS = HERE / "query_vectors.json"
 RESULTS = HERE / "results"
 EVAL_DB = "internscout_eval"
 NO_ANSWER = HERE / "no_answer.jsonl"  # requests the index cannot satisfy, each with a proof query
-AGENT_RUNS = RESULTS / "agent" / "runs.jsonl"
-JUDGEMENTS = RESULTS / "agent" / "judge.jsonl"
-CONVERSATIONS = RESULTS / "agent" / "conversations.jsonl"
+AGENT_DIR = RESULTS / "agent" / PROMPT_VERSION  # one folder of results per prompt version
+AGENT_RUNS = AGENT_DIR / "runs.jsonl"
+JUDGEMENTS = AGENT_DIR / "judge.jsonl"
+CONVERSATIONS = AGENT_DIR / "conversations.jsonl"
 HUMAN_CLAIMS = HERE / "hallucination_labels.jsonl"
 
 

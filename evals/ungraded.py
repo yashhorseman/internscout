@@ -8,7 +8,7 @@ import random
 import sys
 
 from app.db import connect
-from evals.common import AGENT_RUNS, RESULTS, db_url, load_grades, load_queries, read_jsonl
+from evals.common import AGENT_DIR, RESULTS, db_url, load_grades, load_queries, read_jsonl
 
 
 def pairs() -> list[tuple[str, int]]:
@@ -17,7 +17,7 @@ def pairs() -> list[tuple[str, int]]:
     for name in ("rerank_passage_ungraded.json", "e6_ungraded.json"):
         if (RESULTS / name).exists():
             found |= {(q, j) for q, j in json.loads((RESULTS / name).read_text())}
-    for run in read_jsonl(AGENT_RUNS):
+    for run in [r for path in AGENT_DIR.parent.glob("*/runs.jsonl") for r in read_jsonl(path)]:
         if run["id"] in queries:
             found |= {(run["id"], j) for j in [c["job_id"] for c in run["cards"]] + run["found"][:10]}
     return sorted((q, j) for q, j in found if j not in grades.get(q, {}))

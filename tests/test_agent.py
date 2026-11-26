@@ -78,11 +78,11 @@ def test_cards_come_from_the_database(db, jobs):
     assert db.execute("select name, n_results, ok from tool_calls").fetchone() == ("search_jobs", 3, True)
 
 
-def test_loop_stops_at_the_step_limit(db, jobs):
-    script = Script(*[SEARCH] * loop.MAX_STEPS)
+def test_at_the_step_limit_the_model_must_answer_with_what_it_has(db, jobs):
+    script = Script(*[SEARCH] * loop.MAX_STEPS, says((jobs["py"], "Python services")))
     reply = turn(db, store.create_session(db), script)
-    assert reply["outcome"] == "step_limit" and len(script.seen) == loop.MAX_STEPS
-    assert reply["cards"] and reply["cards"][0]["why"] == loop.NEUTRAL_WHY
+    assert reply["outcome"] == "ok" and len(script.seen) == loop.MAX_STEPS + 1
+    assert script.seen[-1]["schema"] and reply["cards"][0]["why"] == "Fits."
 
 
 def test_bad_arguments_go_back_to_the_model(db, jobs):

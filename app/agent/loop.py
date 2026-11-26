@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 MAX_STEPS = 5       # model calls that may use tools, per turn
 MAX_REPAIRS = 2     # extra attempts when the final answer fails the checks
-PROMPT_VERSION = "v2"
+PROMPT_VERSION = "v3"
 PROMPT = (Path(__file__).parent / "prompts" / f"{PROMPT_VERSION}.md").read_text()
 NEUTRAL_WHY = "Matches your search terms."
 
@@ -113,7 +113,7 @@ def run_turn(conn, session_id: str, user_text: str, *, generate=llm.generate, em
     if embed is not None:
         ctx.embed = embed
     trace = {} if trace is None else trace
-    trace.update(first_answer=None, rejections=[], steps=0)
+    trace.update(first_answer=None, rejections=[], steps=0, hit_step_limit=False)
 
     def ask(**options) -> llm.LLMResult:
         if store.tokens_today(conn) >= settings.daily_token_budget:
@@ -142,34 +142,33 @@ def run_turn(conn, session_id: str, user_text: str, *, generate=llm.generate, em
             for call in result.tool_calls:
                 output = tools.execute(ctx, call.name, call.args)
                 messages.append(llm.Message("tool", tool_name=call.name, call_id=call.id, result=output))
-        else:
-            outcome = "step_limit"
+        else:  # no more tool calls: answer with what has been found
+            trace["hit_step_limit"] = True
 
-        if outcome == "ok":
-            schema = AgentReply.model_json_schema()
-            claims_retried = False
-            for attempt in range(MAX_REPAIRS + 1):
-                raw = ask(schema=schema).text
-                candidate, problems = check_reply(conn, raw, ctx.seen)
-                if trace["first_answer"] is None and candidate:
-                    trace["first_answer"] = candidate.model_dump()
-                claims = unsupported_claims(conn, candidate, ctx.seen) if candidate and check_claims else {}
-                # unsupported claims get one retry; after that the explanation is dropped
-                if not problems and (not claims or claims_retried or attempt == MAX_REPAIRS):
-                    reply, removed = candidate, claims
-                    break
-                if claims:
-                    claims_retried = True
-                    problems = problems + [f"for job_id {job_id}, the posting does not support: "
-                                           + ", ".join(failed) for job_id, failed in claims.items()]
-                log.info("answer rejected: %s", problems)
-                trace["rejections"].append(problems)
-                repairs = attempt + 1
-                messages += [llm.Message("assistant", raw or "(empty)"),
-                             llm.Message("user", "That answer was rejected: " + "; ".join(problems)
-                                         + ". Return a corrected answer.")]
-            else:
-                outcome = "invalid_answer"
+        schema = AgentReply.model_json_schema()
+        claims_retried = False
+        for attempt in range(MAX_REPAIRS + 1):
+            raw = ask(schema=schema).text
+            candidate, problems = check_reply(conn, raw, ctx.seen)
+            if trace["first_answer"] is None and candidate:
+                trace["first_answer"] = candidate.model_dump()
+            claims = unsupported_claims(conn, candidate, ctx.seen) if candidate and check_claims else {}
+            # unsupported claims get one retry; after that the explanation is dropped
+            if not problems and (not claims or claims_retried or attempt == MAX_REPAIRS):
+                reply, removed = candidate, claims
+                break
+            if claims:
+                claims_retried = True
+                problems = problems + [f"for job_id {job_id}, the posting does not support: "
+                                       + ", ".join(failed) for job_id, failed in claims.items()]
+            log.info("answer rejected: %s", problems)
+            trace["rejections"].append(problems)
+            repairs = attempt + 1
+            messages += [llm.Message("assistant", raw or "(empty)"),
+                         llm.Message("user", "That answer was rejected: " + "; ".join(problems)
+                                     + ". Return a corrected answer.")]
+        else:
+            outcome = "invalid_answer"
     except BudgetSpent:
         outcome = "budget"
     except (llm.ModelUnavailable, llm.RateLimited, llm.DailyQuotaExhausted) as exc:
@@ -184,8 +183,7 @@ def run_turn(conn, session_id: str, user_text: str, *, generate=llm.generate, em
         question = None
         found = ctx.found[:5] or direct_search(ctx, user_text)
         shown = cards(conn, [(job_id, NEUTRAL_WHY, "") for job_id in found])
-        reason = {"step_limit": "I could not finish working through your request.",
-                  "invalid_answer": "I could not write a reliable explanation.",
+        reason = {"invalid_answer": "I could not write a reliable explanation.",
                   "model_busy": "AI explanations are temporarily unavailable: the model is busy.",
                   "daily_limit": "AI explanations are unavailable: the free daily limit is used up.",
                   "budget": "AI explanations are unavailable: today's usage budget is spent."}[outcome]

@@ -71,6 +71,46 @@ None of these changes made a distinguishable difference in NDCG@10, so the defau
 | E4 re-rank depth | 20 instead of 50 | +0.009 (-0.030 to 0.051) |
 | E4 | 100 instead of 50 | -0.016 (-0.037 to 0.004) |
 
+## The agent, end to end (prompt version 2, 2026-11-26)
+All 40 benchmark queries sent as plain user messages, plus 15 requests nothing in the index can
+satisfy (each proven by a SQL query in `evals/no_answer.jsonl`). Full table:
+`evals/results/agent/v2/report.md`.
+
+| Ranked list | Dev NDCG@10 | Test NDCG@10 |
+|---|---|---|
+| Plain hybrid search | 0.770 | 0.839 |
+| What the agent's searches returned | 0.607 | 0.598 |
+| What the agent recommended (at most 5) | 0.421 | 0.507 |
+
+(Plain hybrid differs from the tables above because these include the extra grades.)
+**The language model in the middle makes the ranking clearly worse.** It writes its own keywords
+and filters, and adds ones the user never gave. Plain search also had hand-written keywords and
+filters, so part of this gap is the benchmark's advantage.
+
+Other findings: 13 of 55 turns used up the 5 tool steps and 14 ended without a proper answer;
+median 15.8 s and 11,493 tokens per turn; 8 of 10 scripted conversations passed.
+
+**Version 3** answers with what it has at the step limit and is told not to invent filters. On the
+23 turns finished before the free daily quota ran out, turns without a proper answer fell from 7
+to 1 and unasked country filters from 8 to 0. The rest of the run is still to do, and quality has
+not been compared.
+
+## Grounding (version 2)
+| | First answer | Shown to the user |
+|---|---|---|
+| Job ids no tool returned | 0 of 47 | none possible |
+| Quote not in the posting | 3 of 47 (6%) | 0 of 45 |
+| A listed claim contradicted by the database | 0 of 47 | none possible |
+| AI judge finds an unsupported statement | 3 of 47 (6%, 2 to 17%) | 2 of 45 (4%, 1 to 15%) |
+
+Read this honestly: the model was already mostly grounded, the code check on claims **never fired**,
+and the judge's before and after cannot be told apart. The checks that did something are the quote
+check and, by construction, the id check. The judge has not been compared with a person, and the
+model chooses which claims to list.
+
+Of the 15 impossible requests, 1 still produced job cards (marketing jobs in Australia: it said
+there were none there and offered ones in India). The messages have not been checked by a person.
+
 ## How the grading rules were arrived at
 Round one: the author re-graded 50 random pairs without seeing the AI grades. Agreement was
 poor: same grade 46%, same on relevant against not relevant 64%, quadratic weighted kappa 0.36.

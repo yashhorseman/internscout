@@ -5,7 +5,8 @@
 1. `POST /sessions/{id}/messages` arrives (`app/api.py`).
 2. `run_turn` (`app/agent/loop.py`) loads the last 12 messages and the saved profile.
 3. **Tool loop** (at most 5 model calls): the model asks for a tool, our code runs it, the
-   result goes back. The model never runs anything itself.
+   result goes back. The model never runs anything itself. At the limit it must answer with what
+   it has.
 4. **Final answer**: one more call that must return JSON matching `AgentReply`.
 5. **Checks**: valid schema, every job id was returned by a tool, every evidence phrase is in
    that posting. A failure is sent back with the reason, up to 2 times.
@@ -24,7 +25,7 @@ user -> loop -> model: "call search_jobs(...)" -> our code -> database
 | `app/llm.py` | The only code that knows about Google. `generate()` retries overload errors |
 | `app/agent/schemas.py` | Pydantic models for tool arguments and the answer |
 | `app/agent/tools.py` | `search_jobs`, `get_job`, `update_profile`, `record_feedback` |
-| `app/agent/prompts/v1.md` | The system prompt, versioned |
+| `app/agent/prompts/v3.md` | The system prompt; earlier versions are kept |
 | `app/agent/loop.py` | The loop, the checks, the fallback |
 | `app/agent/store.py` | Messages, profile, call logs |
 | `app/static/index.html` | The page |
@@ -43,7 +44,10 @@ through a tool and put into every system prompt.
 **Tool errors are data.** Bad arguments return `{"error": ...}` to the model so it can retry.
 
 **Fallback.** If the model is busy, over quota or keeps failing the checks, the user still gets
-the search results, labelled "Matches your search terms".
+search results, labelled "Matches your search terms".
+
+**Likes and dislikes.** In later searches of the same session, postings near the liked ones join
+the ranking as a third list, and disliked postings are left out.
 
 ## Problems found on the first real run
 
@@ -63,12 +67,16 @@ database. The test uses a scripted model that obeys a planted instruction and sh
 blocks the unknown id. It does **not** show that the real model resists injection, and a
 planted instruction could still bias the wording or the choice among real results.
 
-## Not done yet
+## What the evaluation showed
+Version 2 over 55 turns ranked worse than plain search, and 14 turns ended without a proper answer.
+Reading the logs of the development queries gave two causes: the model saved a profile, searched
+and then opened postings one by one until the 5 steps were gone, and it added filters such as
+"India" that nobody asked for. Version 3 changes both. Numbers: `docs/results.md`.
 
-- Ten scripted conversations against the real model.
-- End-to-end evaluation through the agent (compare with the retrieval numbers).
-- Claim checks on `why`; a hallucination rate.
-- No rate limiting or deployment: the server listens on this machine only.
+## Not done yet
+- The rest of the version 3 run and the comparison.
+- A person has not checked the AI judge or the messages for impossible requests.
+- No deployment: the server listens on this machine only.
 
 ## Questions an interviewer may ask
 
@@ -76,6 +84,11 @@ planted instruction could still bias the wording or the choice among real result
 it would invent them. Every job must come from a tool.
 
 **Why limit the loop?** A model can keep calling tools; the cap bounds cost and latency.
+
+**Why did the agent do worse than plain search?** The model rewrites the request into keywords and
+filters, and each guess can exclude good postings. Plain search was also given hand-written
+keywords and filters, so the comparison favours it; the honest conclusion is that the rewriting
+step needs its own evaluation, which this now provides.
 
 **Why a separate final call?** Tools and a strict output format are kept apart, so the answer
 can be validated and retried without repeating searches.

@@ -1,0 +1,32 @@
+# Refresh the index once a day. Does nothing until the two repository secrets exist.
+name: daily refresh
+on:
+  schedule: [{cron: "30 1 * * *"}]   # 07:00 India time
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - name: Check the secrets
+        id: check
+        run: |
+          if [ -n "$DATABASE_URL" ] && [ -n "$GEMINI_API_KEY" ]; then echo "ready=yes" >> "$GITHUB_OUTPUT"
+          else echo "Secrets not set; skipping."; fi
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.ready == 'yes'
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.ready == 'yes'
+        with: {python-version: "3.13", cache: pip}
+      - if: steps.check.outputs.ready == 'yes'
+        run: |
+          pip install -r requirements.txt
+          python -m app.db migrate
+          python -m app.ingest.run
+          python -m app.embed
+          python -m app.admin purge --days 90

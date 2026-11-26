@@ -45,3 +45,17 @@ Embedding one query through the API: median 425 ms (only 5 calls, a rough figure
 `gemini-3.5-flash-lite`, set by CHAT_MODEL. Of the Flash models probed once each, it was the only
 one that answered (others: 503, 504, or closed to new keys). Free-tier limits not yet recorded.
 It often returns 503. First live conversation: 12 to 62 s per turn.
+
+## Container (2026-11-26, Colima on the M2, arm64; an x86 host may differ)
+| What | Without re-ranker | With re-ranker |
+|---|---|---|
+| Image on disk | 362 MB | 2.03 GB |
+| Image compressed | 77 MB | 426 MB |
+| Peak resident memory after 20 searches | 81 MB | 828 MB |
+
+Render's free web service has 512 MB of memory and 0.1 CPU
+([compute plans](https://render.com/docs/compute-plans), read through a web search on 2026-11-26;
+check again before deploying).
+
+**Decision:** deploy `hybrid`, not `hybrid_rerank`. The plan's rule is to drop the re-ranker above
+80% of the host's memory (410 MB); it needs 828 MB. It also did not help on either benchmark set.

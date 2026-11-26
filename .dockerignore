@@ -1,0 +1,7 @@
+# allow list: nothing else (not .env, not data) can reach the image
+*
+!app
+!migrations
+!requirements.txt
+!requirements-rerank.txt
+**/__pycache__

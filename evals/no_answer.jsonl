@@ -1,0 +1,15 @@
+{"id": "n01", "text": "software engineering internship in Japan", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and location_raw ~* 'japan|tokyo'"}
+{"id": "n02", "text": "backend developer jobs in Germany", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and location_raw ~* 'germany|berlin|munich'"}
+{"id": "n03", "text": "marketing jobs in Australia", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and location_raw ~* 'australia|sydney|melbourne'"}
+{"id": "n04", "text": "COBOL mainframe developer", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* '\\mcobol\\M'"}
+{"id": "n05", "text": "veterinary doctor openings", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'veterinar'"}
+{"id": "n06", "text": "airline pilot job", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'airline pilot|commercial pilot|flight officer'"}
+{"id": "n07", "text": "civil engineer for bridge construction", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'civil engineer'"}
+{"id": "n08", "text": "primary school teacher", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'school teacher|primary teacher|classroom teacher'"}
+{"id": "n09", "text": "dentist position at a clinic", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'dentist|dental surgeon'"}
+{"id": "n10", "text": "fashion designer for a clothing line", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'fashion design'"}
+{"id": "n11", "text": "aerospace propulsion engineer", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'propulsion|aerospace engineer'"}
+{"id": "n12", "text": "hospital pharmacist", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'pharmacist'"}
+{"id": "n13", "text": "VLSI chip design with Verilog", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'verilog|vlsi'"}
+{"id": "n14", "text": "petroleum engineer on an oil rig", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'petroleum|oil rig|drilling engineer'"}
+{"id": "n15", "text": "marine biologist research role", "category": "no_answer", "proof_sql": "select count(*) from jobs where status = 'open' and title || ' ' || description_text ~* 'marine biolog'"}

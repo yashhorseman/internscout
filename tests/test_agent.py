@@ -38,9 +38,11 @@ def calls(name, **args):
     return llm.LLMResult(llm.Message("assistant"), [llm.ToolCall(name, args, "c1")], "fake")
 
 
-def says(*recs, message="Here you go", question=None):
+def says(*recs, message="Here you go", question=None, claims=()):
     body = {"message": message, "clarifying_question": question,
-            "recommendations": [{"job_id": j, "why": "Fits.", "evidence": e} for j, e in recs]}
+            "recommendations": [{"job_id": j, "why": "Fits.", "evidence": e,
+                                 "claims": [{"field": f, "value": v} for f, v in claims]}
+                                for j, e in recs]}
     return llm.LLMResult(llm.Message("assistant", json.dumps(body)), model="fake")
 
 
@@ -158,6 +160,7 @@ def test_api(db, jobs, test_db_url, monkeypatch):
         with connect(test_db_url) as conn:
             yield conn
 
+    monkeypatch.setattr(api.settings, "database_url", test_db_url)  # request logging too
     api.app.dependency_overrides[api.db] = test_db
     monkeypatch.setattr(loop, "run_turn", lambda conn, session_id, text: {"message": text, "cards": []})
     try:
@@ -190,3 +193,35 @@ def test_the_model_reads_the_role_not_the_company_introduction(db, jobs):
     job_id = db.execute("select id from jobs where source_job_id = 'g1'").fetchone()[0]
     ctx = tools.Context(db, store.create_session(db), {job_id})
     assert tools.execute(ctx, "get_job", {"job_id": job_id})["description"].startswith("Role 1:")
+
+
+def test_unsupported_claim_is_retried_once_then_the_explanation_is_dropped(db, jobs):
+    bad = says((jobs["py"], "Python services"), claims=[("skill", "Rust")])
+    script = Script(SEARCH, DONE, bad, bad)
+    trace = {}
+    reply = loop.run_turn(db, store.create_session(db), "python", generate=script, embed=embed,
+                          trace=trace)
+    assert (reply["outcome"], reply["repairs"], reply["claims_removed"]) == ("ok", 1, 1)
+    assert reply["cards"][0]["why"] == loop.NEUTRAL_WHY and reply["cards"][0]["evidence"] == ""
+    assert "skill=Rust" in script.seen[-1]["messages"][-1].text
+    assert trace["first_answer"]["recommendations"][0]["claims"] == [{"field": "skill", "value": "Rust"}]
+
+
+def test_a_corrected_claim_keeps_the_explanation(db, jobs):
+    script = Script(SEARCH, DONE, says((jobs["py"], "Python services"), claims=[("remote", "true")]),
+                    says((jobs["py"], "Python services"), claims=[("skill", "Python")]))
+    reply = turn(db, store.create_session(db), script)
+    assert reply["claims_removed"] == 0 and reply["cards"][0]["why"] == "Fits."
+
+
+def test_model_down_from_the_start_still_searches(db, jobs):
+    reply = turn(db, store.create_session(db), Script(llm.ModelUnavailable("503")), "python intern")
+    assert reply["outcome"] == "model_busy" and len(reply["cards"]) == 3
+    assert "temporarily unavailable" in reply["message"]
+
+
+def test_spent_budget_skips_the_model(db, jobs, monkeypatch):
+    monkeypatch.setattr(loop.settings, "daily_token_budget", 0)
+    script = Script()
+    reply = turn(db, store.create_session(db), script, "python")
+    assert reply["outcome"] == "budget" and reply["cards"] and script.seen == []

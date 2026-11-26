@@ -1,11 +1,14 @@
 """Session memory and logs."""
 from psycopg.types.json import Jsonb
 
+from app import context
+
 HISTORY_MESSAGES = 12
 
 
-def create_session(conn) -> str:
-    return str(conn.execute("insert into sessions default values returning id").fetchone()[0])
+def create_session(conn, is_test: bool = False) -> str:
+    return str(conn.execute("insert into sessions (is_test) values (%s) returning id",
+                            (is_test,)).fetchone()[0])
 
 
 def session_exists(conn, session_id: str) -> bool:
@@ -47,14 +50,24 @@ def save_feedback(conn, session_id: str, job_id: int, signal: str) -> None:
 
 
 def log_llm_call(conn, session_id, model, latency_ms, ok, prompt_version,
-                 input_tokens=None, output_tokens=None, error=None) -> None:
+                 input_tokens=None, output_tokens=None, error=None, kind="chat") -> None:
     conn.execute(
         "insert into llm_calls (session_id, kind, model, input_tokens, output_tokens,"
-        " latency_ms, ok, error, prompt_version) values (%s, 'chat', %s, %s, %s, %s, %s, %s, %s)",
-        (session_id, model, input_tokens, output_tokens, latency_ms, ok, error, prompt_version))
+        " latency_ms, ok, error, prompt_version, request_id)"
+        " values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        (session_id, kind, model, input_tokens, output_tokens, latency_ms, ok, error, prompt_version,
+         context.request_id.get()))
 
 
 def log_tool_call(conn, session_id, name, args, n_results, latency_ms, ok) -> None:
-    conn.execute("insert into tool_calls (session_id, name, args, n_results, latency_ms, ok)"
-                 " values (%s, %s, %s, %s, %s, %s)",
-                 (session_id, name, Jsonb(args), n_results, latency_ms, ok))
+    conn.execute("insert into tool_calls (session_id, name, args, n_results, latency_ms, ok, request_id)"
+                 " values (%s, %s, %s, %s, %s, %s, %s)",
+                 (session_id, name, Jsonb(args), n_results, latency_ms, ok, context.request_id.get()))
+
+
+def tokens_today(conn) -> int:
+    """Chat tokens used since midnight UTC, for the daily budget."""
+    return conn.execute(
+        "select coalesce(sum(coalesce(input_tokens, 0) + coalesce(output_tokens, 0)), 0)"
+        " from llm_calls where kind in ('chat', 'verify')"
+        " and created_at >= date_trunc('day', now(), 'UTC')").fetchone()[0]

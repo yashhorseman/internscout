@@ -31,9 +31,11 @@
 <body>
 <main>
   <h1>InternScout</h1>
-  <div class="muted">Searches postings from a limited set of company job boards. Check the posting before applying.
-    This browser keeps your conversation id; clearing site data forgets it. Messages are sent to a free AI service,
-    which may use them to improve its products, so leave out personal details.
+  <div class="muted">A student project. It searches postings collected from the public job boards of a limited
+    set of companies; check the posting before applying. Messages are stored to improve the tool and deleted
+    after 90 days, or sooner if you ask whoever shared this link. They are also sent to a free AI service,
+    which may use them to improve its products, so please do not type personal or sensitive details.
+    This browser keeps your conversation id; clearing site data forgets it.
     <button id="reset" type="button">New conversation</button></div>
   <div id="log" aria-live="polite"></div>
 </main>
@@ -81,7 +83,9 @@ function card(job) {
   box.append(el("p", job.why));
   if (job.evidence) box.append(el("div", "From the posting: “" + job.evidence + "”", "quote"));
   const row = el("div", "", "row");
-  row.append(link(job.apply_url, "Apply"));
+  const apply = link(job.apply_url, "Apply");
+  apply.onclick = () => post(`/sessions/${session}/feedback`, {job_id: job.job_id, signal: "apply_click"}).catch(() => {});
+  row.append(apply);
   if (job.source === "remoteok") row.append(link(job.source_url, "via Remote OK"));
   for (const [signal, label] of [["like", "Like"], ["dislike", "Dislike"], ["save", "Save"]]) {
     const button = el("button", label);
@@ -101,6 +105,7 @@ document.getElementById("form").onsubmit = async (event) => {
   log.append(el("div", text, "you"));
   const waiting = el("div", "Searching… this can take a little while.", "muted");
   log.append(waiting); waiting.scrollIntoView();
+  const slow = setTimeout(() => { waiting.textContent = "Still working. A free service can take up to a minute."; }, 8000);
   try {
     let reply;
     try { reply = await post(`/sessions/${await ensureSession()}/messages`, {text}); }
@@ -114,8 +119,10 @@ document.getElementById("form").onsubmit = async (event) => {
     for (const job of reply.cards) log.append(card(job));
     if (reply.clarifying_question) log.append(el("p", reply.clarifying_question));
   } catch (error) {
-    waiting.textContent = "Something went wrong. Please try again.";
+    waiting.textContent = error.status === 429 ? "Too many messages. Please wait a few minutes."
+      : "Something went wrong. Please try again.";
   }
+  clearTimeout(slow);
   send.disabled = false; input.focus();
   log.lastElementChild.scrollIntoView({block: "nearest"});
 };

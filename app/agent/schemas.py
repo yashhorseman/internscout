@@ -38,11 +38,18 @@ class RecordFeedback(BaseModel):
     signal: Literal["like", "dislike", "save"]
 
 
+class Claim(BaseModel):
+    field: Literal["location", "level", "remote", "skill", "company"]
+    value: str = Field(max_length=60)
+
+
 class Recommendation(BaseModel):
     job_id: int
     why: str = Field(max_length=300)
     evidence: str = Field(min_length=3, max_length=200,
                           description="A phrase copied exactly from the snippet or description, not the title.")
+    claims: list[Claim] = Field(default_factory=list, max_length=6,
+                                description="Every checkable fact stated in why.")
 
 
 class AgentReply(BaseModel):

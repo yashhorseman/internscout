@@ -26,5 +26,5 @@ def test_db_url():
 @pytest.fixture
 def db(test_db_url):
     with connect(test_db_url) as conn:
-        conn.execute("truncate jobs, companies, ingest_runs, sessions restart identity cascade")
+        conn.execute("truncate jobs, companies, ingest_runs, sessions, requests, llm_calls, tool_calls restart identity cascade")
         yield conn

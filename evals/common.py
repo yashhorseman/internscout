@@ -14,6 +14,11 @@ POOL = HERE / "pool.json"
 VECTORS = HERE / "query_vectors.json"
 RESULTS = HERE / "results"
 EVAL_DB = "internscout_eval"
+NO_ANSWER = HERE / "no_answer.jsonl"  # requests the index cannot satisfy, each with a proof query
+AGENT_RUNS = RESULTS / "agent" / "runs.jsonl"
+JUDGEMENTS = RESULTS / "agent" / "judge.jsonl"
+CONVERSATIONS = RESULTS / "agent" / "conversations.jsonl"
+HUMAN_CLAIMS = HERE / "hallucination_labels.jsonl"
 
 
 def db_url(name: str = EVAL_DB) -> str:

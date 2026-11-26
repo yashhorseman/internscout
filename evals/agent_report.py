@@ -2,15 +2,15 @@
 
     python -m evals.agent_report
 """
-import json
 import math
 from statistics import median
 
 from app.agent import loop, verify
 from app.agent.schemas import AgentReply
 from app.db import connect
+from app.retrieval.search import search
 from evals.common import (AGENT_RUNS, JUDGEMENTS, NO_ANSWER, RESULTS, db_url, load_grades,
-                          load_queries, read_jsonl)
+                          load_queries, query_vectors, read_jsonl)
 from evals.metrics import score_query
 
 UNFINISHED = {"model_busy", "daily_limit", "budget"}
@@ -73,7 +73,7 @@ def grounding(conn, runs: list[dict], verdicts: dict, version: str) -> dict:
 def main() -> None:
     queries = {q["id"]: q for q in load_queries()}
     impossible = {q["id"] for q in read_jsonl(NO_ANSWER)}
-    grades = load_grades()
+    grades = load_grades(extra=True)
     runs = [r for r in read_jsonl(AGENT_RUNS) if r["outcome"] not in UNFINISHED]
     verdicts = {(r["id"], r["job_id"], r["why"]): r["supported"] for r in read_jsonl(JUDGEMENTS)}
     total = len(runs)
@@ -91,10 +91,16 @@ def main() -> None:
             if scores:
                 scored[name].append((run["id"], scores))
 
+    # plain hybrid is scored again here so both sides use the same grades
     baseline = {}
-    for split in ("dev", "test"):
-        path = RESULTS / f"{split}_hybrid_or_k60_d50.json"
-        baseline.update(json.loads(path.read_text())["per_query"])
+    vectors = query_vectors(list(queries.values()))
+    with connect(db_url()) as conn:
+        for query in queries.values():
+            hits = search(conn, query["text"], vectors[query["id"]], query.get("filters"), 10,
+                          keywords=query.get("keywords"))
+            scores = score_query([h.job_id for h in hits], grades.get(query["id"], {}))
+            if scores:
+                baseline[query["id"]] = scores
 
     lines = [f"Prompt {loop.PROMPT_VERSION}; {total} finished turns "
              f"({len(queries)} benchmark queries and {len(impossible)} with no answer).", "",

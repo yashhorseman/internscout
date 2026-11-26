@@ -10,6 +10,8 @@ QUERIES = HERE / "queries.jsonl"
 QRELS = HERE / "qrels.jsonl"
 QRELS_CHECK = HERE / "qrels_check.jsonl"  # the author's blind re-grades
 EARLIER_CHECKS = HERE / "qrels_check_round1.jsonl"  # already seen: never sampled again
+# grades for postings first surfaced by later experiments; kept apart so the benchmark stays frozen
+QRELS_EXTRA = HERE / "qrels_extra.jsonl"
 POOL = HERE / "pool.json"
 VECTORS = HERE / "query_vectors.json"
 RESULTS = HERE / "results"
@@ -35,10 +37,11 @@ def load_queries() -> list[dict]:
     return read_jsonl(QUERIES)
 
 
-def load_grades() -> dict[str, dict[int, int]]:
-    """{query id: {job id: grade}}. A later line overrides an earlier one."""
+def load_grades(extra: bool = False) -> dict[str, dict[int, int]]:
+    """{query id: {job id: grade}}. A later line overrides an earlier one.
+    `extra` adds the later grades; use it only when every arm of a comparison gets them."""
     grades: dict[str, dict[int, int]] = {}
-    for row in read_jsonl(QRELS):
+    for row in read_jsonl(QRELS) + (read_jsonl(QRELS_EXTRA) if extra else []):
         grades.setdefault(row["query_id"], {})[row["job_id"]] = row["grade"]
     return grades
 

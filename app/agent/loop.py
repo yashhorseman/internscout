@@ -106,8 +106,8 @@ def _history_messages(conn, session_id: str) -> list[llm.Message]:
 
 def run_turn(conn, session_id: str, user_text: str, *, generate=llm.generate, embed=None,
              check_claims: bool = True, trace: dict | None = None) -> dict:
-    """`trace`, if given, receives the model's first final answer before any claim check,
-    which is what the grounding evaluation compares against."""
+    """`trace`, if given, receives the model's first well-formed answer before any check on its
+    ids, quotes or claims, which is what the grounding evaluation compares against."""
     messages = _history_messages(conn, session_id) + [llm.Message("user", user_text)]
     ctx = tools.Context(conn, session_id, store.seen_job_ids(conn, session_id))
     if embed is not None:
@@ -151,8 +151,8 @@ def run_turn(conn, session_id: str, user_text: str, *, generate=llm.generate, em
             for attempt in range(MAX_REPAIRS + 1):
                 raw = ask(schema=schema).text
                 candidate, problems = check_reply(conn, raw, ctx.seen)
-                if attempt == 0:
-                    trace["first_answer"] = candidate.model_dump() if candidate else None
+                if trace["first_answer"] is None and candidate:
+                    trace["first_answer"] = candidate.model_dump()
                 claims = unsupported_claims(conn, candidate, ctx.seen) if candidate and check_claims else {}
                 # unsupported claims get one retry; after that the explanation is dropped
                 if not problems and (not claims or claims_retried or attempt == MAX_REPAIRS):

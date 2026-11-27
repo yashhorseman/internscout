@@ -33,7 +33,8 @@ flowchart LR
 | Grounding measurement | Code checks done; AI judge unreliable, human labels still to do |
 | Rate limits, fallbacks, request logs, statistics, load test | Done |
 | Docker image and compose file | Done |
-| CI and daily refresh workflows | Written, never run (not on GitHub yet) |
+| Tests on every push (GitHub Actions) | Done |
+| Daily refresh workflow | Written; needs a hosted database, so it does nothing yet |
 | Deployment and real users | Not started |
 
 ## Results

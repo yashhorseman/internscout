@@ -30,3 +30,6 @@ Then: author chose AI grading; a Claude subagent graded the pool. First chat age
 - 2026-11-26: agent v2 evaluated: worse ranking than plain search, 13/55 turns hit the step limit. v3 written.
 - 2026-11-26: free chat quota is 500 requests a day; v3 run stopped at 23/55.
 - 2026-11-26: 203 more postings AI-graded. Personalisation turned from "no gain" to a small gain once graded.
+- 2026-11-27: v3 run finished and graded: unanswered turns 25% to 2%, search NDCG close to plain hybrid; two conversations regressed.
+- 2026-11-27: judge flags several statements that match the database; its rate is not usable.
+- 2026-11-27: pushed to a private GitHub repository.

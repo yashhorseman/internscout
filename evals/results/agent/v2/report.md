@@ -19,6 +19,15 @@ Prompt v2; 55 finished turns (40 benchmark queries and 15 with no answer).
 | What the agent recommended (at most 5) | dev | 24 | 0.258 | 0.421 | 0.421 | 0.770 |
 | What the agent recommended (at most 5) | test | 10 | 0.357 | 0.507 | 0.579 | 0.839 |
 
+## Like for like: the agent's picks against the same number of plain-search results
+NDCG@10 penalises a short list, so this counts how many of the shown jobs are relevant.
+A query counts only when the agent recommended something.
+
+| Split | Queries | Jobs shown | Agent: relevant / grade 2 | Plain hybrid: relevant / grade 2 |
+|---|---|---|---|---|
+| dev | 26 | 79 | 72% / 59% | 78% / 63% |
+| test | 11 | 33 | 70% / 67% | 76% / 73% |
+
 Recommended jobs with no grade (counted as not relevant): 0 of 112.
 
 ## Grounding: before (A) and after (B) the checks

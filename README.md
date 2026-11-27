@@ -29,8 +29,8 @@ flowchart LR
 | Ingestion with change detection and outage-safe expiry | Done: 2,940 postings from 15 boards |
 | Keyword, semantic, hybrid and re-ranked search; likes and dislikes | Done |
 | Retrieval benchmark | Done; AI-graded, human check agreed only moderately |
-| Agent with tools, memory and checked answers; web page | Done; version 3 evaluation partly run |
-| Grounding measurement | First pass done; AI judge not yet compared with a person |
+| Agent with tools, memory and checked answers; web page | Done; evaluated over two prompt versions |
+| Grounding measurement | Code checks done; AI judge unreliable, human labels still to do |
 | Rate limits, fallbacks, request logs, statistics, load test | Done |
 | Docker image and compose file | Done |
 | CI and daily refresh workflows | Written, never run (not on GitHub yet) |
@@ -56,14 +56,21 @@ caveats: [docs/results.md](docs/results.md); failures:
 - Relevance was **graded by an AI**. A blind human re-grade of 50 pairs agreed only moderately
   (weighted kappa 0.45).
 
-### Agent (prompt version 2, 55 turns)
-- Its recommendations ranked **worse than plain search** (test NDCG@10 0.507 against 0.839).
-- 14 turns ended without a proper answer, mostly from the step limit. Version 3 targets this.
-- No made-up job ids. 3 of 47 quotes were not in the posting and were stopped before display.
-- 8 of 10 scripted conversations passed.
+### Agent (55 turns, two prompt versions)
+| | Version 2 | Version 3 |
+|---|---|---|
+| Turns without a usable answer | 25% | 2% |
+| NDCG@10 of its searches, 10 test queries | 0.598 | 0.808 |
+| Median seconds per turn | 15.8 | 9.6 |
+| Scripted conversations passed | 8 of 10 | 7 of 10 |
+
+- Plain hybrid search with hand-written keywords scores 0.839 on the same queries.
+- The jobs it picks are about as relevant as the same number of top search results.
+- No made-up job ids. 7 of 85 quotes were not in the posting and were stopped before display.
+- The AI judge of explanations proved unreliable, so there is no hallucination rate to quote.
 
 ### Service
-- Median agent turn 15.8 s on the free model tier.
+- Median agent turn 9.6 s on the free model tier.
 - With a stand-in model: 20 simultaneous users, 87 requests per second, no errors, p95 320 ms.
 - The free chat quota is 500 requests a day, about 100 conversation turns.
 
@@ -132,7 +139,7 @@ Results from Remote OK are credited "via Remote OK" with a link to the posting.
 - The rate limiter is in memory and assumes one server process.
 
 ## Next
-1. Finish the version 3 agent evaluation and compare it with version 2.
+1. Label explanations by hand, fix or replace the judge, and fix the two conversation regressions.
 2. Deploy, switch on the daily refresh, and collect real queries from at least 10 people.
 3. A city filter, and a limit on near-identical postings in one page of results.
 

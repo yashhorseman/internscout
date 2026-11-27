@@ -68,14 +68,15 @@ blocks the unknown id. It does **not** show that the real model resists injectio
 planted instruction could still bias the wording or the choice among real results.
 
 ## What the evaluation showed
-Version 2 over 55 turns ranked worse than plain search, and 14 turns ended without a proper answer.
-Reading the logs of the development queries gave two causes: the model saved a profile, searched
-and then opened postings one by one until the 5 steps were gone, and it added filters such as
-"India" that nobody asked for. Version 3 changes both. Numbers: `docs/results.md`.
+Version 2 over 55 turns ended 14 without a proper answer. Reading the logs of the development
+queries gave two causes: the model saved a profile, searched and then opened postings one by one
+until the 5 steps were gone, and it added filters such as "India" that nobody asked for. Version 3
+changes both: 1 turn in 55 now ends without an answer, and its searches score close to plain
+hybrid search. It also broke two conversations that used to pass. Numbers: `docs/results.md`.
 
 ## Not done yet
-- The rest of the version 3 run and the comparison.
-- A person has not checked the AI judge or the messages for impossible requests.
+- A person has not labelled explanations or checked the messages for impossible requests.
+- The AI judge marks some correct statements as unsupported.
 - No deployment: the server listens on this machine only.
 
 ## Questions an interviewer may ask
@@ -85,10 +86,10 @@ it would invent them. Every job must come from a tool.
 
 **Why limit the loop?** A model can keep calling tools; the cap bounds cost and latency.
 
-**Why did the agent do worse than plain search?** The model rewrites the request into keywords and
-filters, and each guess can exclude good postings. Plain search was also given hand-written
-keywords and filters, so the comparison favours it; the honest conclusion is that the rewriting
-step needs its own evaluation, which this now provides.
+**Does the language model improve the search?** Not measurably. It rewrites the request into
+keywords and filters, and in version 2 its guesses excluded good postings. Version 3 is close to
+plain search, which had hand-written keywords. What the model adds is the conversation, the memory
+and the explanations.
 
 **Why a separate final call?** Tools and a strict output format are kept apart, so the answer
 can be validated and retried without repeating searches.

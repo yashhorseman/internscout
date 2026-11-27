@@ -97,12 +97,13 @@ def main() -> None:
                 scored[name].append((run["id"], scores))
 
     # plain hybrid is scored again here so both sides use the same grades
-    baseline = {}
+    baseline, plain_ids = {}, {}
     vectors = query_vectors(list(queries.values()))
     with connect(db_url()) as conn:
         for query in queries.values():
             hits = search(conn, query["text"], vectors[query["id"]], query.get("filters"), 10,
                           keywords=query.get("keywords"))
+            plain_ids[query["id"]] = [h.job_id for h in hits]
             scores = score_query([h.job_id for h in hits], grades.get(query["id"], {}))
             if scores:
                 baseline[query["id"]] = scores
@@ -131,6 +132,28 @@ def main() -> None:
                          f"{mean([s['ndcg@10'] for _, s in rows]):.3f} | "
                          f"{mean([baseline[q]['recall@5'] for q, _ in rows]):.3f} | "
                          f"{mean([baseline[q]['ndcg@10'] for q, _ in rows]):.3f} |")
+    lines += ["", "## Like for like: the agent's picks against the same number of plain-search results",
+              "NDCG@10 penalises a short list, so this counts how many of the shown jobs are relevant.",
+              "A query counts only when the agent recommended something.", "",
+              "| Split | Queries | Jobs shown | Agent: relevant / grade 2 | Plain hybrid: relevant / grade 2 |",
+              "|---|---|---|---|---|"]
+    for split in ("dev", "test"):
+        shown = agent_any = agent_two = plain_any = plain_two = count = 0
+        for run in runs:
+            query = queries.get(run["id"])
+            picks = [c["job_id"] for c in run["cards"]]
+            if not query or query["split"] != split or not picks:
+                continue
+            known = grades.get(run["id"], {})
+            top = plain_ids[run["id"]][:len(picks)]
+            count, shown = count + 1, shown + len(picks)
+            agent_any += sum(known.get(j, 0) > 0 for j in picks)
+            agent_two += sum(known.get(j, 0) == 2 for j in picks)
+            plain_any += sum(known.get(j, 0) > 0 for j in top)
+            plain_two += sum(known.get(j, 0) == 2 for j in top)
+        if shown:
+            lines.append(f"| {split} | {count} | {shown} | {agent_any / shown:.0%} / {agent_two / shown:.0%} | "
+                         f"{plain_any / shown:.0%} / {plain_two / shown:.0%} |")
     lines += ["", f"Recommended jobs with no grade (counted as not relevant): {unlabeled} of {ranked_total}."]
 
     with connect(db_url()) as conn:

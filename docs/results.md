@@ -71,45 +71,61 @@ None of these changes made a distinguishable difference in NDCG@10, so the defau
 | E4 re-rank depth | 20 instead of 50 | +0.009 (-0.030 to 0.051) |
 | E4 | 100 instead of 50 | -0.016 (-0.037 to 0.004) |
 
-## The agent, end to end (prompt version 2, 2026-11-26)
+## The agent, end to end (2026-11-26 and 27)
 All 40 benchmark queries sent as plain user messages, plus 15 requests nothing in the index can
-satisfy (each proven by a SQL query in `evals/no_answer.jsonl`). Full table:
-`evals/results/agent/v2/report.md`.
+satisfy (each proven by a SQL query in `evals/no_answer.jsonl`). Full tables:
+`evals/results/agent/v2/report.md` and `v3/report.md`.
 
-| Ranked list | Dev NDCG@10 | Test NDCG@10 |
+Version 2 ended 14 turns without a proper answer. The logs of the **development** queries showed
+two causes: the model saved a profile, searched and then opened postings one at a time until its 5
+steps were gone, and it added filters such as "India" that nobody asked for. Version 3 answers
+with what it has at the step limit and is told not to invent filters.
+
+| 55 turns | Version 2 | Version 3 |
 |---|---|---|
-| Plain hybrid search | 0.770 | 0.839 |
-| What the agent's searches returned | 0.607 | 0.598 |
-| What the agent recommended (at most 5) | 0.421 | 0.507 |
+| Ended without a usable answer | 14 (25%) | 1 (2%) |
+| Used all 5 tool steps | 13 (24%) | 1 (2%) |
+| First answer rejected and retried | 3 (5%) | 9 (16%) |
+| Seconds per turn, median | 15.8 | 9.6 |
+| Tokens per turn, median | 11,493 | 10,384 |
+| Scripted conversations passed | 8 of 10 | 7 of 10 |
+
+| NDCG@10 | Plain hybrid | v2 searches | v3 searches | v2 picks | v3 picks |
+|---|---|---|---|---|---|
+| Development (24) | 0.770 | 0.607 | 0.767 | 0.421 | 0.441 |
+| Test (10) | 0.839 | 0.598 | 0.808 | 0.507 | 0.570 |
 
 (Plain hybrid differs from the tables above because these include the extra grades.)
-**The language model in the middle makes the ranking clearly worse.** It writes its own keywords
-and filters, and adds ones the user never gave. Plain search also had hand-written keywords and
-filters, so part of this gap is the benchmark's advantage.
+**Version 3's searches are close to plain search**, which was given hand-written keywords.
 
-Other findings: 13 of 55 turns used up the 5 tool steps and 14 ended without a proper answer;
-median 15.8 s and 11,493 tokens per turn; 8 of 10 scripted conversations passed.
+The "picks" columns look poor mainly because the agent shows at most 5 jobs, often 2 or 3, while
+the score counts 10 places. Compared like for like (the agent's picks against the same number of
+top plain-search results), version 3's picks were relevant 85% of the time against 82% on
+development (61 jobs), and 92% against 85% on test (26 jobs). That is **about the same**; these
+counts are too small to call it better.
 
-**Version 3** answers with what it has at the step limit and is told not to invent filters. On the
-23 turns finished before the free daily quota ran out, turns without a proper answer fell from 7
-to 1 and unasked country filters from 8 to 0. The rest of the run is still to do, and quality has
-not been compared.
+**What got worse in version 3.** It failed two conversations that version 2 passed: it did not set
+the internship filter for "find me backend internships", and it asked a question instead of
+searching for "I'm a fresher looking for jobs in India only". Both versions fail "I need a job"
+on the check as written; version 3 does ask there, but in the message rather than the field.
 
-## Grounding (version 2)
+## Grounding (version 3)
 | | First answer | Shown to the user |
 |---|---|---|
-| Job ids no tool returned | 0 of 47 | none possible |
-| Quote not in the posting | 3 of 47 (6%) | 0 of 45 |
-| A listed claim contradicted by the database | 0 of 47 | none possible |
-| AI judge finds an unsupported statement | 3 of 47 (6%, 2 to 17%) | 2 of 45 (4%, 1 to 15%) |
+| Job ids no tool returned | 0 of 85 | none possible |
+| Quote not in the posting | 7 of 85 (8%) | 0 of 82 |
+| A listed claim contradicted by the database | 3 of 85 (4%) | none possible |
+| AI judge finds an unsupported statement | 9 of 85 (11%) | 10 of 82 (12%) |
 
-Read this honestly: the model was already mostly grounded, the code check on claims **never fired**,
-and the judge's before and after cannot be told apart. The checks that did something are the quote
-check and, by construction, the id check. The judge has not been compared with a person, and the
-model chooses which claims to list.
+The code checks stop bad quotes and contradicted claims, and a retry usually repairs them (no
+explanation had to be dropped). **The AI judge cannot be used as it is:** of its 10 flags on shown
+explanations, several contradict the posting's own location field (for example, it marks "London"
+unsupported for a job listed in London). So there is no trustworthy figure yet for statements
+beyond the listed claims. That needs the human labels (`python -m evals.label_claims`) and a
+better judge.
 
-Of the 15 impossible requests, 1 still produced job cards (marketing jobs in Australia: it said
-there were none there and offered ones in India). The messages have not been checked by a person.
+None of the 15 impossible requests produced job cards in version 3 (1 did in version 2). The
+messages have not been checked by a person.
 
 ## How the grading rules were arrived at
 Round one: the author re-graded 50 random pairs without seeing the AI grades. Agreement was

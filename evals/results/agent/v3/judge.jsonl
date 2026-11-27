@@ -1,0 +1,92 @@
+{"id": "q001", "job_id": 2387, "why": "This is an intern role at Stripe located in Bengaluru.", "supported": true, "unsupported": []}
+{"id": "q001", "job_id": 2388, "why": "This is an intern role at Stripe located in London.", "supported": true, "unsupported": []}
+{"id": "q001", "job_id": 2386, "why": "This is an intern role at Stripe located in Singapore.", "supported": true, "unsupported": []}
+{"id": "q001", "job_id": 2391, "why": "This is a summer intern role at Stripe located in San Francisco, Seattle, New York City.", "supported": true, "unsupported": []}
+{"id": "q002", "job_id": 227, "why": "This is an intern-level product management role located in Bangalore at Rubrik.", "supported": true, "unsupported": []}
+{"id": "q003", "job_id": 2816, "why": "This intern position at Paytm in Noida involves supporting the recruitment team by sourcing and screening candidates and maintaining trackers.", "supported": true, "unsupported": []}
+{"id": "q003", "job_id": 2818, "why": "This IT recruitment intern role at Paytm in Noida focuses on tech hiring requirements, sourcing, and interview coordination.", "supported": true, "unsupported": []}
+{"id": "q003", "job_id": 2817, "why": "This Bangalore-based intern opening at Paytm supports the recruitment team with sourcing, screening, and interview coordination.", "supported": true, "unsupported": []}
+{"id": "q003", "job_id": 2730, "why": "This Bangalore internship at Paytm involves candidate sourcing, outreach via LinkedIn Recruiter, and conducting initial phone screens.", "supported": true, "unsupported": []}
+{"id": "q004", "job_id": 1524, "why": "This Technical Services Engineer role is located in Bengaluru and Gurugram, where you will diagnose problems and advise customers on the MongoDB ecosystem.", "supported": true, "unsupported": []}
+{"id": "q004", "job_id": 1521, "why": "This Technical Services Engineer position is based in Bengaluru, helping customers solve complex MongoDB problems and run MongoDB at scale.", "supported": true, "unsupported": []}
+{"id": "q005", "job_id": 2396, "why": "This is an entry level Software Engineer, New Grad position at Stripe located in San Francisco, Seattle, New York.", "supported": true, "unsupported": []}
+{"id": "q005", "job_id": 2398, "why": "This is an entry level Software Engineer, New Grad position at Stripe located in Bangalore.", "supported": false, "unsupported": ["Bangalore"]}
+{"id": "q005", "job_id": 2399, "why": "This is an entry level Software Engineer, New Grad position at Stripe located in London.", "supported": false, "unsupported": ["London"]}
+{"id": "q005", "job_id": 2400, "why": "This is an entry level Software Engineer, New Grad position at Stripe located in Toronto.", "supported": false, "unsupported": ["Toronto"]}
+{"id": "q006", "job_id": 354, "why": "This entry-level Associate Customer Success Manager position at Okta in Bengaluru focuses on digital customer success, protecting renewals, and improving adoption across the Asia Silver team.", "supported": true, "unsupported": []}
+{"id": "q007", "job_id": 2570, "why": "This Data Scientist III role at Meesho involves developing models, running experiments, and designing discount programs in Bangalore.", "supported": true, "unsupported": []}
+{"id": "q007", "job_id": 2571, "why": "This Data Scientist III (Team- Valmo) role focuses on supply chain network optimization and operations research in Bangalore.", "supported": true, "unsupported": []}
+{"id": "q008", "job_id": 863, "why": "This Production Engineer role at Zscaler in Bangalore requires Python expertise and focuses on building scalable systems.", "supported": true, "unsupported": []}
+{"id": "q008", "job_id": 1600, "why": "This Intermediate Backend Engineer role at GitLab in Bangalore involves building backend features and working with data models, APIs, and services.", "supported": true, "unsupported": []}
+{"id": "q009", "job_id": 1088, "why": "This senior role at Zscaler matches your Java and microservices skills in a distributed environment.", "supported": true, "unsupported": []}
+{"id": "q009", "job_id": 1454, "why": "This role at MongoDB involves modernizing applications into microservices-based architectures using Java and Spring Boot.", "supported": true, "unsupported": []}
+{"id": "q010", "job_id": 688, "why": "This role at Okta focuses on Kubernetes platform creation and large-scale automation in Bengaluru, India.", "supported": true, "unsupported": []}
+{"id": "q010", "job_id": 1051, "why": "Zscaler in Bangalore is hiring a Senior Staff DevOps Engineer for their cloud security platform.", "supported": true, "unsupported": []}
+{"id": "q010", "job_id": 522, "why": "Okta seeks a Senior Site Reliability Engineer in Bengaluru to handle container platform migrations including EKS/GKE.", "supported": true, "unsupported": []}
+{"id": "q010", "job_id": 1059, "why": "Zscaler offers a hybrid Staff DevOps Engineer role in Bangalore, India.", "supported": true, "unsupported": []}
+{"id": "q010", "job_id": 2612, "why": "Zeta in Hyderabad is looking for a DevSecOps Engineer II to work with Kubernetes and container platforms.", "supported": true, "unsupported": []}
+{"id": "q010", "job_id": 688, "why": "This role at Okta provides easy, secure access for your workforce in Bengaluru, India.", "supported": false, "unsupported": ["This role at Okta provides easy, secure access for your workforce in Bengaluru, India."]}
+{"id": "q010", "job_id": 1051, "why": "Zscaler in Bangalore is hiring a Senior Staff DevOps engineer for their Engineering department.", "supported": true, "unsupported": []}
+{"id": "q011", "job_id": 447, "why": "This senior role at Okta in Bengaluru focuses on frontend development with React and TypeScript.", "supported": true, "unsupported": []}
+{"id": "q012", "job_id": 1746, "why": "This senior role at GitLab in Bangalore involves designing dashboards, reports, and data models to inform strategic decisions using SQL.", "supported": true, "unsupported": []}
+{"id": "q013", "job_id": 786, "why": "This role involves leading the design and implementation of distributed systems at Zscaler in Hyderabad.", "supported": true, "unsupported": []}
+{"id": "q014", "job_id": 82, "why": "This role focuses on deploying and maintaining machine learning models in production, building scalable ML services, and monitoring performance.", "supported": true, "unsupported": []}
+{"id": "q014", "job_id": 62, "why": "This position involves bringing models to life in production and working on production-scale algorithms.", "supported": true, "unsupported": []}
+{"id": "q015", "job_id": 2387, "why": "This is a software engineering intern position at Stripe in Bengaluru.", "supported": true, "unsupported": []}
+{"id": "q015", "job_id": 317, "why": "This is a software engineer intern role located in Bangalore at Rubrik.", "supported": true, "unsupported": []}
+{"id": "q015", "job_id": 2386, "why": "This role is a software engineering intern position at Stripe based in Singapore.", "supported": true, "unsupported": []}
+{"id": "q016", "job_id": 1977, "why": "Stripe offers an internship position for data analysts to work with fundamental data and build metrics and dashboards.", "supported": true, "unsupported": []}
+{"id": "q016", "job_id": 1976, "why": "Stripe provides an internship role in Toronto focusing on data analysis and data science initiatives.", "supported": false, "unsupported": ["Toronto"]}
+{"id": "q017", "job_id": 227, "why": "This is a product management internship located in Bangalore at Rubrik, where the Product Management team drives forward our vision of delivering a market-leading platform.", "supported": true, "unsupported": []}
+{"id": "q017", "job_id": 228, "why": "This is a product management intern position at Rubrik located in Palo Alto, CA.", "supported": true, "unsupported": []}
+{"id": "q017", "job_id": 230, "why": "This is a product management intern role at Rubrik based in Palo Alto, CA.", "supported": true, "unsupported": []}
+{"id": "q017", "job_id": 228, "why": "This is a product management intern position at Rubrik located in Palo Alto, CA, which leads at the intersection of data protection, cyber resilience, and enterprise AI acceleration.", "supported": true, "unsupported": []}
+{"id": "q017", "job_id": 230, "why": "This is a product management intern role at Rubrik based in Palo Alto, CA, leading at the intersection of data protection and cyber resilience.", "supported": true, "unsupported": []}
+{"id": "q018", "job_id": 762, "why": "This entry-level support role is designed for professionals looking to deliver platform support and eliminate repetitive manual work in Bangalore.", "supported": true, "unsupported": []}
+{"id": "q018", "job_id": 354, "why": "This entry-level customer success role in Bengaluru involves driving adoption and working with customers in the APAC region.", "supported": true, "unsupported": []}
+{"id": "q018", "job_id": 762, "why": "This support role at Zscaler is located in Bangalore and involves delivering first-line platform support.", "supported": true, "unsupported": []}
+{"id": "q018", "job_id": 354, "why": "This entry-level customer success role in Bengaluru involves protecting renewals and helping customers reach value faster.", "supported": true, "unsupported": []}
+{"id": "q019", "job_id": 2359, "why": "This is an entry-level security engineering role specifically for new graduates at Stripe.", "supported": true, "unsupported": []}
+{"id": "q020", "job_id": 2178, "why": "Stripe offers a Master's machine learning engineering internship in Toronto for the summer of 2027.", "supported": true, "unsupported": []}
+{"id": "q020", "job_id": 2225, "why": "Stripe offers a PhD machine learning engineering internship located in San Francisco, New York City, and Seattle for the summer of 2027.", "supported": true, "unsupported": []}
+{"id": "q021", "job_id": 2729, "why": "This intern role at Paytm in Noida involves supporting HR, conducting orientation sessions, and maintaining employee records.", "supported": true, "unsupported": []}
+{"id": "q021", "job_id": 2818, "why": "This intern position at Paytm in Noida is focused on IT recruitment within HR.", "supported": true, "unsupported": []}
+{"id": "q021", "job_id": 2730, "why": "This talent acquisition intern role at Paytm in Bangalore involves candidate sourcing, screening, and outreach.", "supported": true, "unsupported": []}
+{"id": "q022", "job_id": 2398, "why": "This entry-level Software Engineer role at Stripe is located in Bangalore and focuses on building software solutions.", "supported": true, "unsupported": []}
+{"id": "q022", "job_id": 316, "why": "This Software Engineer position at Rubrik is based in Bangalore and involves building cloud native protection software.", "supported": true, "unsupported": []}
+{"id": "q023", "job_id": 64, "why": "InMobi is hiring for an Assistant Sales Manager - Digital Ads in Mumbai.", "supported": true, "unsupported": []}
+{"id": "q023", "job_id": 184, "why": "Rubrik is hiring an Enterprise Account Executive in Mumbai.", "supported": true, "unsupported": []}
+{"id": "q023", "job_id": 393, "why": "Okta is hiring an Enterprise Account Executive in Mumbai, India.", "supported": false, "unsupported": ["Remote"]}
+{"id": "q023", "job_id": 64, "why": "InMobi is hiring for an Assistant Sales Manager - Digital Ads in Mumbai, featuring a great workplace culture.", "supported": true, "unsupported": []}
+{"id": "q024", "job_id": 1218, "why": "This position is located in Gurugram at MongoDB and involves enterprise software and developer solutions.", "supported": true, "unsupported": []}
+{"id": "q024", "job_id": 1382, "why": "This senior role is a brand new engineering team position located in Gurugram focusing on AI frameworks.", "supported": true, "unsupported": []}
+{"id": "q024", "job_id": 1528, "why": "This senior technical position at MongoDB in Gurugram is part of the IT SaaS Engineering Team.", "supported": true, "unsupported": []}
+{"id": "q024", "job_id": 1436, "why": "This senior staff engineering position is based in Gurugram within the Products & Technology team.", "supported": true, "unsupported": []}
+{"id": "q025", "job_id": 2774, "why": "This position is located in Noida and focuses on product strategy and user growth as a Product Manager at Paytm.", "supported": true, "unsupported": []}
+{"id": "q025", "job_id": 2783, "why": "This role is based in Noida and involves product management responsibilities at Paytm.", "supported": true, "unsupported": []}
+{"id": "q025", "job_id": 2786, "why": "This senior product manager role is located in Noida at Paytm.", "supported": true, "unsupported": []}
+{"id": "q025", "job_id": 2785, "why": "This position is available in Noida at Paytm focusing on UPI product management.", "supported": false, "unsupported": ["This position is available in Noida at Paytm focusing on UPI product management."]}
+{"id": "q026", "job_id": 49, "why": "This senior role is located in Pune, Maharashtra, India and focuses on Product Security.", "supported": true, "unsupported": []}
+{"id": "q027", "job_id": 1746, "why": "This senior role in Bangalore involves turning raw data into actionable insights and designing dashboards and data models.", "supported": true, "unsupported": []}
+{"id": "q027", "job_id": 476, "why": "This senior data analyst role located in Bengaluru involves data enablement, building semantic models, and driving product and customer insights.", "supported": true, "unsupported": []}
+{"id": "q028", "job_id": 2387, "why": "This is a software engineering internship located in Bengaluru at Stripe.", "supported": true, "unsupported": []}
+{"id": "q028", "job_id": 227, "why": "This is a product management internship located in Bangalore at Rubrik.", "supported": true, "unsupported": []}
+{"id": "q028", "job_id": 180, "why": "This is a project and program manager internship located in Bangalore at Rubrik.", "supported": true, "unsupported": []}
+{"id": "q028", "job_id": 2730, "why": "This is a talent acquisition internship located in Bangalore at Paytm.", "supported": true, "unsupported": []}
+{"id": "q029", "job_id": 1567, "why": "This remote role in India involves hands-on technical guidance, software development background, and working across the software delivery lifecycle.", "supported": false, "unsupported": ["software development background"]}
+{"id": "q030", "job_id": 1606, "why": "This remote entry-level role at GitLab is ideal for an early career professional looking to work in talent acquisition operations.", "supported": true, "unsupported": []}
+{"id": "q030", "job_id": 2848, "why": "This entry-level position at Oscar Health is fully remote and offers an opportunity in payment integrity support.", "supported": true, "unsupported": []}
+{"id": "q030", "job_id": 760, "why": "This entry-level remote role at Zscaler is suited for starting a career in product sales and account management.", "supported": false, "unsupported": ["entry-level"]}
+{"id": "q031", "job_id": 1567, "why": "This role at GitLab is remote and involves partnering with customers to help them get measurable value through technical guidance, matching your customer support background.", "supported": false, "unsupported": ["matching your customer support background"]}
+{"id": "q032", "job_id": 1113, "why": "This internship at MongoDB in New York City involves examining emerging AI tools to improve everyday experiences for employees and teams.", "supported": true, "unsupported": []}
+{"id": "q033", "job_id": 1524, "why": "This role involves partnering with customers to solve complex technical problems and advise them on data architecture and query performance.", "supported": true, "unsupported": []}
+{"id": "q033", "job_id": 1567, "why": "This position lets you partner with customers to provide hands-on technical guidance and help them solve day-to-day technical issues.", "supported": true, "unsupported": []}
+{"id": "q034", "job_id": 2632, "why": "This role at Zeta in Hyderabad involves securing applications by breaking and hacking them, as well as performing vulnerability assessment and penetration testing.", "supported": true, "unsupported": []}
+{"id": "q034", "job_id": 1094, "why": "This senior-level role at Zscaler in Bangalore requires web application and API penetration testing, manual vulnerability validation, and advanced exploitation work.", "supported": true, "unsupported": []}
+{"id": "q035", "job_id": 587, "why": "This senior role at Okta focuses on conducting generative and evaluative user research to shape access management experiences.", "supported": true, "unsupported": []}
+{"id": "q035", "job_id": 2620, "why": "This lead design position at Zeta requires a deep understanding of user behavior and crafting end-to-end digital banking experiences.", "supported": true, "unsupported": []}
+{"id": "q036", "job_id": 2403, "why": "This role involves architecting backend services that handle money movement and payment offerings in India.", "supported": true, "unsupported": []}
+{"id": "q036", "job_id": 2384, "why": "This team builds robust infrastructure powering financial operations like payments processing and fund settlement.", "supported": true, "unsupported": []}
+{"id": "q037", "job_id": 1125, "why": "This position at MongoDB serves as the starting point and foundation of their sales organization, allowing you to partner with Account Executives and build a career in technology sales in Bengaluru.", "supported": true, "unsupported": []}
+{"id": "q037", "job_id": 1126, "why": "Located in Gurugram, this MongoDB role acts as the foundation of their sales organization and lets you work closely with Account Executives to identify new opportunities.", "supported": true, "unsupported": []}
+{"id": "q037", "job_id": 1143, "why": "This entry-level Associate Commercial Growth Account Executive role at MongoDB in Austin involves unleashing the power of software and data.", "supported": true, "unsupported": []}

@@ -24,8 +24,8 @@ gave 0.587), so we normalize before storing.
 - 1,000 requests per day (`EmbedContentRequestsPerDayPerUserPerProjectPerModel-FreeTier`, from the
   error on 2026-11-26). Each posting counts as one, and so does each new search query, so a full
   embedding run must leave room for queries.
-- Live database on 2026-11-26: 1,652 of 2,940 open postings embedded, 83 MB. The rest need two
-  more days of quota. The benchmark snapshot is unchanged at 815.
+- Live database on 2026-11-27: 2,452 of 2,940 open postings embedded, 88 MB. The remaining 488
+  need one more day of quota. The benchmark snapshot is unchanged at 815.
 
 ## Embedding text
 - Cut at 6,000 characters; 50 sampled postings: median 1,178 tokens, max 1,977, none over 2,048

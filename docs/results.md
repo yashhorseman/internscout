@@ -161,7 +161,7 @@ semantic over hybrid. Files: `evals/qrels_check.jsonl`, `python -m evals.agreeme
 - Many comparisons with no correction for multiple testing; the semantic-over-hybrid interval
   only narrowly excludes zero.
 - Relevant postings that no setting retrieved were never graded.
-- In the live database only 1,652 of 2,940 postings have embeddings (2026-11-26), so semantic-only
+- In the live database 2,452 of 2,940 postings have embeddings (2026-11-27), so semantic-only
   search would never find the rest. This benchmark does not measure that.
 
 Per-query numbers: `evals/results/`.
